@@ -1,8 +1,130 @@
-import { FaFacebook, FaYoutube, FaLinkedin, FaTwitter, FaInstagram } from 'react-icons/fa';
-import { SlCallIn } from "react-icons/sl";
-import { TfiEmail } from "react-icons/tfi";
+// 'use client';
+// import { useState } from 'react';
+// import { FaFacebook, FaYoutube, FaLinkedin, FaInstagram, FaBriefcase } from 'react-icons/fa';
+// import { FiSearch, FiPhone, FiHeadphones } from 'react-icons/fi';
+// import { DM_Sans } from 'next/font/google';
+// import Link from 'next/link';
+
+// const dmSans = DM_Sans({
+//   subsets: ['latin'],
+//   weight: ['400', '500', '700'],
+//   variable: '--font-dm-sans'
+// });
+
+// const ContactBar = () => {
+//   const [showSearch, setShowSearch] = useState(false);
+
+//   return (
+//     <div className={`${dmSans.variable} font-sans bg-white text-black py-3 px-6 border-b border-gray-200`}>
+//       <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-3 md:gap-4">
+
+//         {/* LEFT Side — Social Media */}
+//         <div className="flex items-center gap-2 sm:gap-3">
+//           {[
+//             { href: 'https://www.facebook.com/share/1MF4B4je3J/?mibextid=wwXIfr', label: 'Facebook', Icon: FaFacebook },
+//             { href: 'https://youtube.com/@atozeeswitchgearengineerin3268?si=XNOq10AjBtpGU_cq', label: 'YouTube', Icon: FaYoutube },
+//             { href: 'https://www.linkedin.com/company/a-to-zee-switchgear-engineering-smc-pvt-ltd/', label: 'LinkedIn', Icon: FaLinkedin },
+//             { href: 'https://www.instagram.com/atozeeswitchgear.pk', label: 'Instagram', Icon: FaInstagram },
+//           ].map(({ href, label, Icon }) => (
+//             <a
+//               key={label}
+//               href={href}
+//               target="_blank"
+//               rel="noopener noreferrer"
+//               aria-label={label}
+//               className="w-8 h-8 flex items-center justify-center rounded-full border border-gray-300 text-black hover:bg-[#009E4D] hover:border-[#009E4D] hover:text-white transition-all duration-200"
+//             >
+//               <Icon className="text-sm" />
+//             </a>
+//           ))}
+//         </div>
+
+//         {/* RIGHT Side — Search + Support & Complaint + Careers + Contact */}
+//         <div className="flex items-center gap-4 sm:gap-6 flex-wrap justify-center md:justify-end">
+
+//           {/* 1. Search Button (toggles input) */}
+//           <div className="relative flex items-center">
+//             <button
+//               onClick={() => setShowSearch(!showSearch)}
+//               className="flex items-center gap-2 text-black hover:text-[#009E4D] transition-colors group"
+//               aria-label="Search"
+//             >
+//               <FiSearch className="text-sm md:text-base group-hover:scale-110 transition-transform" />
+//               <span className={`text-xs md:text-sm font-medium tracking-wider uppercase ${dmSans.className}`}>
+//                 Search
+//               </span>
+//             </button>
+
+//             {showSearch && (
+//               <input
+//                 type="text"
+//                 placeholder="Search..."
+//                 autoFocus
+//                 className="ml-3 w-40 md:w-52 px-3 py-1 text-xs md:text-sm border-2 border-[#009E4D] rounded-full focus:outline-none focus:ring-2 focus:ring-[#009E4D]/30 transition"
+//               />
+//             )}
+//           </div>
+
+//           {/* Divider */}
+//           <div className="hidden sm:block h-4 w-px bg-gray-300"></div>
+
+//           {/* 2. Support & Complaint Button */}
+//           <Link
+//             href="/support"
+//             className="flex items-center gap-2 text-black hover:text-[#009E4D] transition-colors group"
+//             aria-label="Support & Complaint"
+//           >
+//             <FiHeadphones className="text-sm md:text-base group-hover:scale-110 transition-transform" />
+//             <span className={`text-xs md:text-sm font-medium tracking-wider uppercase ${dmSans.className}`}>
+//               Support &amp; Complaint
+//             </span>
+//           </Link>
+
+//           {/* Divider */}
+//           <div className="hidden sm:block h-4 w-px bg-gray-300"></div>
+
+//           {/* 3. Careers Button */}
+//           <Link
+//             href="/careers"
+//             className="flex items-center gap-2 text-black hover:text-[#009E4D] transition-colors group"
+//             aria-label="Careers"
+//           >
+//             <FaBriefcase className="text-sm md:text-base group-hover:scale-110 transition-transform" />
+//             <span className={`text-xs md:text-sm font-medium tracking-wider uppercase ${dmSans.className}`}>
+//               Careers
+//             </span>
+//           </Link>
+
+//           {/* Divider */}
+//           <div className="hidden sm:block h-4 w-px bg-gray-300"></div>
+
+//           {/* 4. Contact Button */}
+//           <Link
+//             href="/contact"
+//             className="flex items-center gap-2 text-black hover:text-[#009E4D] transition-colors group"
+//             aria-label="Contact"
+//           >
+//             <FiPhone className="text-sm md:text-base group-hover:scale-110 transition-transform" />
+//             <span className={`text-xs md:text-sm font-medium tracking-wider uppercase ${dmSans.className}`}>
+//               Contact
+//             </span>
+//           </Link>
+//         </div>
+
+//       </div>
+//     </div>
+//   );
+// };
+
+// export default ContactBar;
+
+
+'use client';
+import { useState } from 'react';
+import { FaFacebook, FaYoutube, FaLinkedin, FaInstagram, FaBriefcase } from 'react-icons/fa';
+import { FiSearch, FiPhone, FiHeadphones } from 'react-icons/fi';
 import { DM_Sans } from 'next/font/google';
-import { MdOutlineMessage  } from "react-icons/md";
+import Link from 'next/link';
 
 const dmSans = DM_Sans({
   subsets: ['latin'],
@@ -11,128 +133,105 @@ const dmSans = DM_Sans({
 });
 
 const ContactBar = () => {
+  const [showSearch, setShowSearch] = useState(false);
+
   return (
-    <div className={`${dmSans.variable} font-sans bg-white text-black py-4 px-6 shadow-md border-t border-gray-200`}>
-      <div className="max-w-6xl mx-auto flex flex-col md:flex-row justify-between items-center gap-4">
-        
-        {/* Left Side - Email */}
-        <div className="flex items-center">
-          <a 
-            href="mailto:info@atozee.net" 
-            className="flex items-center gap-3 hover:text-blue-600 transition-colors group"
-            aria-label="Email us"
-          >
-            <MdOutlineMessage  className="text-[#8B5E3C] text-md md:text-xl group-hover:scale-110 transition-transform" />
-            <span className={`text-base md:text-xs font-medium tracking-wider ${dmSans.className}`}>
-Get Free Inquiry            </span>
-          </a>
+    <div className={`${dmSans.variable} font-sans bg-white text-black py-3 px-3 sm:px-6 border-b border-gray-200`}>
+      <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-3 md:gap-4">
+
+        {/* LEFT Side — Social Media */}
+        <div className="flex items-center gap-2 sm:gap-3">
+          {[
+            { href: 'https://www.facebook.com/share/1MF4B4je3J/?mibextid=wwXIfr', label: 'Facebook', Icon: FaFacebook },
+            { href: 'https://youtube.com/@atozeeswitchgearengineerin3268?si=XNOq10AjBtpGU_cq', label: 'YouTube', Icon: FaYoutube },
+            { href: 'https://www.linkedin.com/company/a-to-zee-switchgear-engineering-smc-pvt-ltd/', label: 'LinkedIn', Icon: FaLinkedin },
+            { href: 'https://www.instagram.com/atozeeswitchgear.pk', label: 'Instagram', Icon: FaInstagram },
+          ].map(({ href, label, Icon }) => (
+            <a
+              key={label}
+              href={href}
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label={label}
+              className="w-7 h-7 sm:w-8 sm:h-8 flex items-center justify-center rounded-full border border-gray-300 text-black hover:bg-[#009E4D] hover:border-[#009E4D] hover:text-white transition-all duration-200"
+            >
+              <Icon className="text-xs sm:text-sm" />
+            </a>
+          ))}
         </div>
 
+        {/* RIGHT Side — Search + Support & Complaint + Careers + Contact */}
+        <div className="flex items-center gap-3 sm:gap-4 md:gap-6 flex-wrap justify-center md:justify-end w-full md:w-auto">
 
- <div className="hidden md:block h-8 w-px bg-gray-300 mx-4"></div>
+          {/* 1. Search Button (toggles input) */}
+          <div className="relative flex items-center">
+            <button
+              onClick={() => setShowSearch(!showSearch)}
+              className="flex items-center gap-1.5 sm:gap-2 text-black hover:text-[#009E4D] transition-colors group"
+              aria-label="Search"
+            >
+              <FiSearch className="text-sm md:text-base group-hover:scale-110 transition-transform" />
+              <span className={`text-[11px] sm:text-xs md:text-sm font-medium tracking-wider uppercase ${dmSans.className}`}>
+                Search
+              </span>
+            </button>
 
- 
-         <div className="flex items-center">
-          <a 
-            href="mailto:info@atozee.net" 
-            className="flex items-center gap-3 hover:text-blue-600 transition-colors group"
-            aria-label="Email us"
+            {showSearch && (
+              <input
+                type="text"
+                placeholder="Search..."
+                autoFocus
+                className="ml-2 sm:ml-3 w-32 sm:w-40 md:w-52 px-2.5 sm:px-3 py-1 text-xs md:text-sm border-2 border-[#009E4D] rounded-full focus:outline-none focus:ring-2 focus:ring-[#009E4D]/30 transition"
+              />
+            )}
+          </div>
+
+          {/* Divider */}
+          <div className="hidden sm:block h-4 w-px bg-gray-300"></div>
+
+          {/* 2. Support & Complaint Button */}
+          <Link
+            href="/support"
+            className="flex items-center gap-1.5 sm:gap-2 text-black hover:text-[#009E4D] transition-colors group"
+            aria-label="Support & Complaint"
           >
-            <TfiEmail className="text-[#8B5E3C] text-md md:text-xl group-hover:scale-110 transition-transform" />
-            <span className={`text-base md:text-xs font-medium tracking-wider ${dmSans.className}`}>
-info@atozee.net            </span>
-          </a>
+            <FiHeadphones className="text-sm md:text-base group-hover:scale-110 transition-transform" />
+            <span className={`text-[11px] sm:text-xs md:text-sm font-medium tracking-wider uppercase ${dmSans.className}`}>
+              Support &amp; Complaint
+            </span>
+          </Link>
+
+          {/* Divider */}
+          <div className="hidden sm:block h-4 w-px bg-gray-300"></div>
+
+          {/* 3. Careers Button */}
+          <Link
+            href="/careers"
+            className="flex items-center gap-1.5 sm:gap-2 text-black hover:text-[#009E4D] transition-colors group"
+            aria-label="Careers"
+          >
+            <FaBriefcase className="text-sm md:text-base group-hover:scale-110 transition-transform" />
+            <span className={`text-[11px] sm:text-xs md:text-sm font-medium tracking-wider uppercase ${dmSans.className}`}>
+              Careers
+            </span>
+          </Link>
+
+          {/* Divider */}
+          <div className="hidden sm:block h-4 w-px bg-gray-300"></div>
+
+          {/* 4. Contact Button */}
+          <Link
+            href="/contact"
+            className="flex items-center gap-1.5 sm:gap-2 text-black hover:text-[#009E4D] transition-colors group"
+            aria-label="Contact"
+          >
+            <FiPhone className="text-sm md:text-base group-hover:scale-110 transition-transform" />
+            <span className={`text-[11px] sm:text-xs md:text-sm font-medium tracking-wider uppercase ${dmSans.className}`}>
+              Contact
+            </span>
+          </Link>
         </div>
-        
-        {/* Vertical Divider - Only on larger screens */}
-        <div className="hidden md:block h-8 w-px bg-gray-300 mx-4"></div>
-        
-        {/* Middle - Phone Number */}
-        <div className="flex items-center">
-          <a 
-            href="tel:03218752630" 
-            className="flex items-center gap-3 hover:text-blue-600 transition-colors group"
-            aria-label="Call us"
-          >
-            <SlCallIn className="text-[#8B5E3C] text-md md:text-xl group-hover:scale-110 transition-transform" />
-            <div className="flex flex-col sm:flex-row sm:items-center sm:gap-2">
-              {/* <span className={`text-base font-semibold md:text-lg ${dmSans.className}`}>
-                Talk to expert
-              </span> */}
-              <span className={`text-base md:text-xs font-medium tracking-wider ${dmSans.className}`}>
-+92 321-8752630            </span>
-            </div>
 
-            
-          </a>
-        </div>
-
-
-        
-        
-        {/* Vertical Divider - Only on larger screens */}
-        <div className="hidden md:block h-6 w-px bg-gray-300 mx-4"></div>
-        
-        {/* Right Side - Social Media with dividers */}
-        <div className="flex items-center gap-5 md:gap-6">
-          <a 
-            href="https://www.facebook.com/arsalanzaman99/" 
-            target="_blank" 
-            rel="noopener noreferrer"
-            className="text-[#3b5998] transition-colors text-xl"
-            aria-label="Facebook"
-          >
-            <FaFacebook />
-          </a>
-          
-          <div className="h-6 w-px bg-gray-300"></div>
-          
-          <a 
-            href="https://twitter.com" 
-            target="_blank" 
-            rel="noopener noreferrer"
-            className="text-[#1DA1F2] transition-colors text-xl"
-            aria-label="Twitter"
-          >
-            <FaTwitter />
-          </a>
-          
-          <div className="h-6 w-px bg-gray-300"></div>
-          
-          <a 
-            href="https://youtube.com" 
-            target="_blank" 
-            rel="noopener noreferrer"
-            className="text-[#FF0000] transition-colors text-xl"
-            aria-label="YouTube"
-          >
-            <FaYoutube />
-          </a>
-          
-          <div className="h-6 w-px bg-gray-300"></div>
-          
-          <a 
-            href="https://linkedin.com" 
-            target="_blank" 
-            rel="noopener noreferrer"
-            className="text-[#0077B5] transition-colors text-xl"
-            aria-label="LinkedIn"
-          >
-            <FaLinkedin />
-          </a>
-          
-          <div className="h-6 w-px bg-gray-300"></div>
-          
-          <a 
-            href="https://instagram.com" 
-            target="_blank" 
-            rel="noopener noreferrer"
-            className="text-[#E1306C] transition-colors text-xl"
-            aria-label="Instagram"
-          >
-            <FaInstagram />
-          </a>
-        </div>
       </div>
     </div>
   );

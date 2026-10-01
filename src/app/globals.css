@@ -5,6 +5,72 @@
 @import 'swiper/css/navigation';
 @import 'swiper/css/pagination';
 
+/* ══════════════════════════════════════════════════════════════
+   BASE HTML/BODY — overflow-x: clip (sticky/fixed navbar support)
+   ══════════════════════════════════════════════════════════════ */
+
+html,
+body {
+  overflow-x: clip;
+  /* ⚠️ IMPORTANT: overflow-x: hidden hota to sticky/fixed navbar
+     kaam nahi karta. clip use kiya hai, jo sticky ko break nahi karta. */
+}
+
+/* ══════════════════════════════════════════════════════════════
+   CUSTOM SCROLLBAR — BLACK → GREEN on HOVER (#009E4D)
+   ══════════════════════════════════════════════════════════════ */
+
+/* Modern Chrome/Edge (v121+) — supports hover via :hover */
+html {
+  scrollbar-width: thin;
+  scrollbar-color: #000000 #e5e5e5;
+}
+
+html:hover {
+  scrollbar-color: #009E4D #e5e5e5;
+}
+
+/* WebKit browsers (Chrome, Safari, Edge, Brave, Opera) */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: #e5e5e5;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: #000000;
+  border-radius: 6px;
+  border: 2px solid #e5e5e5;
+}
+
+/* 🔥 HOVER — turns GREEN */
+::-webkit-scrollbar-thumb:hover {
+  background-color: #009E4D !important;
+}
+
+/* 🔥 ACTIVE (dragging) — darker green */
+::-webkit-scrollbar-thumb:active {
+  background-color: #007a3c !important;
+}
+
+/* Corner */
+::-webkit-scrollbar-corner {
+  background: #e5e5e5;
+}
+
+/* Firefox fallback — no hover support */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #000000 #e5e5e5;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   MARQUEE ANIMATION
+   ══════════════════════════════════════════════════════════════ */
+
 @keyframes marquee {
   0% {
     transform: translateX(-50%);
@@ -18,37 +84,133 @@
   animation: marquee linear infinite;
 }
 
+/* ══════════════════════════════════════════════════════════════
+   SLIDE IN RIGHT ANIMATION (Navbar mobile menu)
+   ══════════════════════════════════════════════════════════════ */
+
+@keyframes slideInRight {
+  from {
+    transform: translateX(100%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+
+.animate-slide-in-right {
+  animation: slideInRight 0.3s ease-out forwards;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   HIDE SCROLLBAR UTILITY
+   ══════════════════════════════════════════════════════════════ */
+
 .scrollbar-hide::-webkit-scrollbar {
   display: none;
 }
+
 .scrollbar-hide {
-  -ms-overflow-style: none;  /* IE/Edge */
-  scrollbar-width: none;     /* Firefox */
+  -ms-overflow-style: none;
+  scrollbar-width: none;
 }
 
- /* @layer utilities {
-//   @keyframes fadeInDown {
-//     from {
-//       opacity: 0;
-//       transform: translateY(-20px);
-//     }
-//     to {
-//       opacity: 1;
-//       transform: translateY(0);
-//     }
-//   }
-//   @keyframes fadeIn {
-//     from {
-//       opacity: 0;
-//     }
-//     to {
-//       opacity: 1;
-//     }
-//   }
-//   .animate-fadeInDown {
-//     animation: fadeInDown 0.5s ease-out forwards;
-//   }
-//   .animate-fadeIn {
-//     animation: fadeIn 0.8s ease-out forwards;
-//   }
-// } */
+/* ══════════════════════════════════════════════════════════════
+   ✅ NEWS MARQUEE ANIMATION (heading scroll)
+   ══════════════════════════════════════════════════════════════ */
+
+@keyframes news-marquee {
+  0% {
+    transform: translate3d(0, 0, 0);
+  }
+  100% {
+    transform: translate3d(-100%, 0, 0);
+  }
+}
+
+.news-animate-marquee {
+  animation: news-marquee 30s linear infinite;
+  will-change: transform;
+}
+
+.news-animation-paused {
+  animation: news-marquee 30s linear infinite;
+  animation-play-state: paused;
+  will-change: transform;
+}
+
+.news-no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   ✅ NEWS POPUP / MODAL ANIMATIONS
+   ══════════════════════════════════════════════════════════════ */
+
+@keyframes news-fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes news-zoom-in {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.news-animate-fade-in {
+  animation: news-fade-in 0.25s ease-out forwards;
+}
+
+.news-animate-zoom-in {
+  animation: news-zoom-in 0.3s ease-out forwards;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   ✅ NEWS POPUP SCROLLBAR — BLACK → GREEN on HOVER
+   ══════════════════════════════════════════════════════════════ */
+
+/* WebKit (Chrome, Safari, Edge, Brave, Opera) */
+.news-popup-scroll::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+.news-popup-scroll::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 4px;
+}
+
+.news-popup-scroll::-webkit-scrollbar-thumb {
+  background-color: #000000;
+  border-radius: 4px;
+  border: 2px solid #f1f1f1;
+}
+
+/* 🔥 HOVER — turns GREEN */
+.news-popup-scroll::-webkit-scrollbar-thumb:hover {
+  background-color: #009E4D !important;
+}
+
+/* 🔥 ACTIVE (dragging) — darker green */
+.news-popup-scroll::-webkit-scrollbar-thumb:active {
+  background-color: #007a3c !important;
+}
+
+.news-popup-scroll::-webkit-scrollbar-corner {
+  background: #f1f1f1;
+}
+
+/* Firefox */
+.news-popup-scroll {
+  scrollbar-width: thin;
+  scrollbar-color: #000000 #f1f1f1;
+}

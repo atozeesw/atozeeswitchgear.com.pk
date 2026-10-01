@@ -1,142 +1,176 @@
-'use client';
-import React, { useState, useEffect, useCallback } from 'react';
-import Image from 'next/image';
-import Link from 'next/link';
-import { DM_Sans } from 'next/font/google';
+// 'use client';
+// import React, { useState } from 'react';
+// import Image from 'next/image';
+// import Link from 'next/link';
+// import { FaArrowRight } from 'react-icons/fa';
+// import { DM_Sans } from 'next/font/google';
+// import ProjectInquiryForm from '@/app/Components/form';
 
-const dmSans = DM_Sans({ 
+// const dmSans = DM_Sans({
+//   subsets: ['latin'],
+//   weight: ['400', '500', '700'],
+// });
+
+// const QuoteSection = () => {
+//   const [showQuoteForm, setShowQuoteForm] = useState(false);
+
+//   return (
+//     <>
+//       <section className={`w-full bg-white ${dmSans.className}`}>
+//         <div className="max-w-7xl mx-auto px-4 sm:px-6 md:px-8 lg:px-12">
+
+//           {/* TOP LINE */}
+//           <div className="w-full h-px bg-gray-200"></div>
+
+//           {/* Main Content */}
+//           <div className="py-5 sm:py-6 md:py-8">
+//             <div className="flex flex-col lg:flex-row items-center gap-5 sm:gap-6 lg:gap-8">
+
+//               {/* LEFT — Image */}
+//               <div className="w-full lg:w-1/2 flex justify-center">
+//                 <Image
+//                   src="/q.png"
+//                   alt="A to Zee Switchgear Engineering"
+//                   width={600}
+//                   height={400}
+//                   className="w-full h-auto max-w-[500px] object-contain"
+//                   priority
+//                 />
+//               </div>
+
+//               {/* RIGHT — Content + Button */}
+//               <div className="w-full lg:w-1/2 text-center lg:text-left px-1 sm:px-0">
+//                 <h2 className="text-xs sm:text-sm font-bold text-black tracking-[0.2em] uppercase inline-block relative pb-2 mb-2 sm:mb-3">
+//                   Get In Touch
+//                   <span className="absolute left-1/2 lg:left-0 -translate-x-1/2 lg:translate-x-0 bottom-0 w-12 h-0.5 bg-[#009E4D]"></span>
+//                 </h2>
+
+//                 <h3 className="text-lg sm:text-xl md:text-2xl lg:text-3xl font-bold text-black tracking-tight mb-3 sm:mb-4 leading-tight">
+//                   Need a Custom Switchgear Solution?
+//                 </h3>
+
+//                 <p className="text-xs sm:text-sm md:text-base text-gray-600 leading-relaxed mb-5 sm:mb-6 max-w-xl mx-auto lg:mx-0">
+//                   Our engineering team is ready to help you design, manufacture, and deliver reliable electrical solutions tailored to your project. Get a personalized quote today.
+//                 </p>
+
+//                 {/* Button — opens form modal */}
+//                 <button
+//                   type="button"
+//                   onClick={() => setShowQuoteForm(true)}
+//                   className="inline-flex items-center gap-2 px-6 sm:px-8 py-2.5 sm:py-3 bg-transparent border-2 border-black text-black rounded-full font-semibold text-xs sm:text-sm uppercase tracking-wider transition-all duration-200 hover:bg-[#009E4D] hover:border-[#009E4D] hover:text-white group"
+//                 >
+//                   Get a Quote
+//                   <FaArrowRight className="group-hover:translate-x-1 transition-transform" size={14} />
+//                 </button>
+//               </div>
+
+//             </div>
+//           </div>
+
+//           {/* BOTTOM LINE */}
+//           <div className="w-full h-px bg-gray-200"></div>
+
+//         </div>
+//       </section>
+
+//       {/* Form Modal */}
+//       <ProjectInquiryForm
+//         isOpen={showQuoteForm}
+//         onClose={() => setShowQuoteForm(false)}
+//         initialInquiry="Get a Quote"
+//         readOnlyInquiry={false}
+//       />
+//     </>
+//   );
+// };
+
+// export default QuoteSection;
+
+
+
+'use client';
+import React, { useState } from 'react';
+import Image from 'next/image';
+import { FaArrowRight } from 'react-icons/fa';
+import { DM_Sans } from 'next/font/google';
+import ProjectInquiryForm from '@/app/Components/form';
+
+const dmSans = DM_Sans({
   subsets: ['latin'],
   weight: ['400', '500', '700'],
 });
 
-const Banner = () => {
-  const [activeIndex, setActiveIndex] = useState(0);
-  const [exitAnimation, setExitAnimation] = useState(false);
-
-  const slides = [
-    {
-      image: '/q2.jpg',
-      heading: 'QUALITY - SAFETY INNOVATION',
-      subheading: 'SWITCH GEARS',
-      description: 'For decades we have been setting standards in innovation, safety and quality in our core business of switchgear systems',
-      buttonText: 'Read More',
-      buttonLink: '/products'
-    },
-    {
-      image: '/q2.jpg',
-      subheading: 'SERVICES',
-      description: 'Our comprehensive service package leaves no wish unanswered - we do everything from assembly to maintenance and a 24/7 365 emergency services, right through to a comprehensive spare parts service.',
-      buttonText: 'Read More',
-      buttonLink: '/distribution'
-    },
-    {
-      image: '/q2.jpg',
-      subheading: 'AUTOMATION',
-      description: 'We are constantly developing reliable automation solutions that are specifically tailored to customers needs in the field of automation and control systems.',
-      buttonText: 'Read More',
-      buttonLink: '/control-panels'
-    },
-    {
-      image: '/q2.jpg',
-      subheading: 'SOLUTION',
-      description: 'We combine the products of selected partners with A to Zee services and a comprehensive project management to come up with professional solutions.',
-      buttonText: 'Read More',
-      buttonLink: '/energy-management'
-    }
-  ];
-
-  const goToNext = useCallback(() => {
-    setExitAnimation(true);
-    setTimeout(() => {
-      setActiveIndex((prev) => (prev + 1) % slides.length);
-      setExitAnimation(false);
-    }, 300);
-  }, [slides.length]);
-
-  useEffect(() => {
-    const interval = setInterval(goToNext, 5000);
-    return () => clearInterval(interval);
-  }, [goToNext]);
-
-  const handleDotClick = useCallback((index: number) => {
-    if (index !== activeIndex) {
-      setExitAnimation(true);
-      setTimeout(() => {
-        setActiveIndex(index);
-        setExitAnimation(false);
-      }, 300);
-    }
-  }, [activeIndex]);
+const QuoteSection = () => {
+  const [showQuoteForm, setShowQuoteForm] = useState(false);
 
   return (
-    <div className={`relative w-full h-[65vh] min-h-[450px] sm:h-[75vh] md:h-[80vh] lg:min-h-[550px] overflow-hidden ${dmSans.className}`}>
-      <Image
-        src={slides[activeIndex].image}
-        alt="Banner"
-        fill
-        className="object-cover brightness-75"
-        priority
-      />
+    <>
+      <section className={`w-full bg-white ${dmSans.className}`}>
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 md:px-8 lg:px-12">
 
-      <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-30">
-        <div className="container mx-auto px-4 sm:px-5 md:px-6 text-center">
-          <div className="max-w-3xl sm:max-w-4xl lg:max-w-5xl mx-auto">
-            {/* Static heading */}
-            <h1 className={`text-2xl sm:text-3xl md:text-4xl lg:text-[2.8rem] font-bold text-white mb-3 sm:mb-5 tracking-wide ${dmSans.className}`}>
-              {slides[0].heading}
-            </h1>
-            
-            {/* Animated content section */}
-            <div className="mt-6 sm:mt-8 md:mt-12 overflow-hidden relative">
-              {/* Subheading animation */}
-              <div className={`transition-all duration-300 ease-in-out ${
-                exitAnimation ? 'translate-x-full opacity-0' : 'translate-x-0 opacity-100'
-              }`}>
-                <h2 className={`text-xl sm:text-2xl md:text-3xl font-bold text-white mb-3 sm:mb-5 tracking-wide ${dmSans.className}`}>
-                  {slides[activeIndex].subheading}
+          {/* TOP LINE */}
+          <div className="w-full h-px bg-gray-200"></div>
+
+          {/* Main Content */}
+          <div className="py-5 sm:py-6 md:py-8">
+            <div className="flex flex-col lg:flex-row items-center gap-5 sm:gap-6 lg:gap-8">
+
+              {/* LEFT — Image */}
+              <div className="w-full lg:w-1/2 flex justify-center">
+                <Image
+                  src="/q.png"
+                  alt="A to Zee Switchgear Engineering"
+                  width={600}
+                  height={400}
+                  className="w-full h-auto max-w-[500px] object-contain"
+                  priority
+                />
+              </div>
+
+              {/* RIGHT — Content + Button */}
+              <div className="w-full lg:w-1/2 text-center lg:text-left px-1 sm:px-0">
+                <h2 className="text-xs sm:text-sm font-bold text-black tracking-[0.2em] uppercase inline-block relative pb-2 mb-2 sm:mb-3">
+                  Get In Touch
+                  <span className="absolute left-1/2 lg:left-0 -translate-x-1/2 lg:translate-x-0 bottom-0 w-12 h-0.5 bg-[#009E4D]"></span>
                 </h2>
-              </div>
-              
-              {/* Description animation */}
-              <div className={`transition-all duration-300 ease-in-out delay-75 ${
-                exitAnimation ? 'translate-x-full opacity-0' : 'translate-x-0 opacity-100'
-              }`}>
-                <p className={`text-sm sm:text-base md:text-lg text-white mb-4 sm:mb-6 mx-auto font-light tracking-wider max-w-xl sm:max-w-2xl md:max-w-3xl leading-relaxed ${dmSans.className}`}>
-                  {slides[activeIndex].description}
+
+                <h3 className="text-lg sm:text-xl md:text-2xl lg:text-3xl font-bold text-black tracking-tight mb-3 sm:mb-4 leading-tight">
+                  Need a Custom Switchgear Solution?
+                </h3>
+
+                <p className="text-xs sm:text-sm md:text-base text-gray-600 leading-relaxed mb-5 sm:mb-6 max-w-xl mx-auto lg:mx-0">
+                  Our engineering team is ready to help you design, manufacture, and deliver reliable electrical solutions tailored to your project. Get a personalized quote today.
                 </p>
-                
-                {/* Read More Button */}
-                <div className={`transition-all duration-300 ease-in-out delay-150 ${
-                  exitAnimation ? 'translate-x-full opacity-0' : 'translate-x-0 opacity-100'
-                }`}>
-                  <Link
-                    href={slides[activeIndex].buttonLink}
-                    className={`inline-block px-6 py-2 sm:px-8 sm:py-3 bg-white text-gray-800 rounded-md font-medium text-sm sm:text-base hover:bg-gray-100 transition-colors duration-300 ${dmSans.className}`}
-                  >
-                    {slides[activeIndex].buttonText}
-                  </Link>
-                </div>
+
+                {/* Button — opens form modal */}
+                <button
+                  type="button"
+                  onClick={() => setShowQuoteForm(true)}
+                  className="inline-flex items-center gap-2 px-6 sm:px-8 py-2.5 sm:py-3 bg-transparent border-2 border-black text-black rounded-full font-semibold text-xs sm:text-sm uppercase tracking-wider transition-all duration-200 hover:bg-[#009E4D] hover:border-[#009E4D] hover:text-white group"
+                >
+                  Get a Quote
+                  <FaArrowRight className="group-hover:translate-x-1 transition-transform" size={14} />
+                </button>
               </div>
+
             </div>
           </div>
-        </div>
-      </div>
 
-      {/* Navigation dots */}
-      <div className="absolute bottom-6 sm:bottom-8 md:bottom-12 left-0 right-0 flex justify-center gap-2 sm:gap-3">
-        {slides.map((_, index) => (
-          <button
-            key={index}
-            onClick={() => handleDotClick(index)}
-            className={`w-1.5 h-1.5 sm:w-2 sm:h-2 md:w-2 md:h-2 rounded-full transition-all ${
-              index === activeIndex ? 'bg-white w-6 sm:w-8 md:w-10' : 'bg-white bg-opacity-50'
-            }`}
-            aria-label={`Go to slide ${index + 1}`}
-          />
-        ))}
-      </div>
-    </div>
+          {/* BOTTOM LINE */}
+          <div className="w-full h-px bg-gray-200"></div>
+
+        </div>
+      </section>
+
+      {/* Form Modal */}
+      <ProjectInquiryForm
+        isOpen={showQuoteForm}
+        onClose={() => setShowQuoteForm(false)}
+        initialInquiry="Get a Quote"
+        readOnlyInquiry={false}
+      />
+    </>
   );
 };
 
-export default Banner;
+export default QuoteSection;

@@ -1,398 +1,741 @@
-// 'use client'
-// import { useEffect, useState, useCallback } from 'react'
-// import Image from 'next/image'
-// import { FaArrowRight } from 'react-icons/fa'
-// import Link from 'next/link'
-// import { client } from '@/sanity/lib/client'
-// import { DM_Sans } from 'next/font/google'
+// // 'use client';
+// // import React, { useRef, useState, useEffect } from 'react';
 
-// const dmsans = DM_Sans({ 
-//   subsets: ['latin'],
-//   weight: ['400', '500', '700'],
-// })
+// // const MovingBar = () => {
+// //   const text = "A to Zee Switchgear Engineering is a leading Pakistani manufacturer of high-quality electrical switchgear, control panels, and power distribution solutions. Based in Karachi, the company serves industrial, commercial, and utility sectors with reliable, standards-compliant (IEC, IEEE) products. Known for innovation and precision engineering, A to Zee provides customized electrical solutions backed by strong technical expertise and after-sales support, contributing to Pakistan's power infrastructure development.";
 
-// const newsQuery = `
-//   *[_type == "news"] {
-//   _id,
-//   _createdAt,
-//   _updatedAt,
-//   name,
-//   "slug": slug.current,
-//   description,
-//   publishDate,
-//   "mainImage": images[0].asset->url,
-//   images[] {
-//     asset-> {
-//       _id,
-//       url,
-//       metadata {
-//         dimensions {
-//           width,
-//           height,
-//           aspectRatio
-//         }
-//       }
-//     }
-//   }
-// } | order(publishDate desc)
-// `
+// //   const marqueeRef = useRef<HTMLDivElement>(null);
+// //   const [isDragging, setIsDragging] = useState(false);
+// //   const [isPaused, setIsPaused] = useState(false);
 
-// const newsImageQuery = `
-//   *[_type == "newsimage"].images[].asset->url
-// `
+// //   const dragStartX = useRef(0);
+// //   const scrollStartX = useRef(0);
+// //   const lastX = useRef(0);
+// //   const lastTime = useRef(0);
+// //   const velocity = useRef(0);
+// //   const momentumFrame = useRef<number | null>(null);
 
-// interface NewsItem {
-//   _id: string
-//   name: string
-//   slug: string
-//   description?: string
-//   publishDate: string
-//   images: {
-//     asset: {
-//       url: string
-//       metadata: {
-//         dimensions: {
-//           width: number
-//           height: number
-//         }
-//       }
-//     }
-//   }[]
-// }
+// //   // Clean up momentum on unmount
+// //   useEffect(() => {
+// //     return () => {
+// //       if (momentumFrame.current) cancelAnimationFrame(momentumFrame.current);
+// //     };
+// //   }, []);
 
-// export default function NewsSection() {
-//   const [newsItems, setNewsItems] = useState<NewsItem[]>([])
-//   const [newsImages, setNewsImages] = useState<string[]>([])
-//   const [currentSlide, setCurrentSlide] = useState(0)
-//   const [isHovered, setIsHovered] = useState(false)
+// //   // ─── Mouse ────────────────────────────────────────────────
+// //   const handleMouseDown = (e: React.MouseEvent) => {
+// //     if (!marqueeRef.current) return;
 
+// //     // Cancel any running momentum
+// //     if (momentumFrame.current) {
+// //       cancelAnimationFrame(momentumFrame.current);
+// //       momentumFrame.current = null;
+// //     }
+
+// //     setIsDragging(true);
+// //     setIsPaused(true);
+
+// //     dragStartX.current = e.pageX;
+// //     scrollStartX.current = marqueeRef.current.scrollLeft;
+
+// //     lastX.current = e.pageX;
+// //     lastTime.current = Date.now();
+// //     velocity.current = 0;
+// //   };
+
+// //   const handleMouseMove = (e: React.MouseEvent) => {
+// //     if (!isDragging || !marqueeRef.current) return;
+
+// //     const deltaX = e.pageX - dragStartX.current;
+// //     marqueeRef.current.scrollLeft = scrollStartX.current - deltaX;
+
+// //     // Calculate velocity for momentum
+// //     const now = Date.now();
+// //     const dt = now - lastTime.current;
+// //     if (dt > 0) {
+// //       velocity.current = (e.pageX - lastX.current) / dt;
+// //     }
+// //     lastX.current = e.pageX;
+// //     lastTime.current = now;
+// //   };
+
+// //   const handleMouseUp = () => {
+// //     if (!isDragging) return;
+// //     setIsDragging(false);
+// //     startMomentum();
+// //   };
+
+// //   const handleMouseLeave = () => {
+// //     if (isDragging) {
+// //       setIsDragging(false);
+// //       startMomentum();
+// //     }
+// //   };
+
+// //   // ─── Touch ────────────────────────────────────────────────
+// //   const handleTouchStart = (e: React.TouchEvent) => {
+// //     if (!marqueeRef.current) return;
+
+// //     if (momentumFrame.current) {
+// //       cancelAnimationFrame(momentumFrame.current);
+// //       momentumFrame.current = null;
+// //     }
+
+// //     setIsDragging(true);
+// //     setIsPaused(true);
+
+// //     dragStartX.current = e.touches[0].pageX;
+// //     scrollStartX.current = marqueeRef.current.scrollLeft;
+// //     lastX.current = e.touches[0].pageX;
+// //     lastTime.current = Date.now();
+// //     velocity.current = 0;
+// //   };
+
+// //   const handleTouchMove = (e: React.TouchEvent) => {
+// //     if (!isDragging || !marqueeRef.current) return;
+
+// //     const deltaX = e.touches[0].pageX - dragStartX.current;
+// //     marqueeRef.current.scrollLeft = scrollStartX.current - deltaX;
+
+// //     const now = Date.now();
+// //     const dt = now - lastTime.current;
+// //     if (dt > 0) {
+// //       velocity.current = (e.touches[0].pageX - lastX.current) / dt;
+// //     }
+// //     lastX.current = e.touches[0].pageX;
+// //     lastTime.current = now;
+// //   };
+
+// //   const handleTouchEnd = () => {
+// //     if (!isDragging) return;
+// //     setIsDragging(false);
+// //     startMomentum();
+// //   };
+
+// //   // ─── Momentum (inertia) ──────────────────────────────────
+// //   const startMomentum = () => {
+// //     let v = velocity.current * 15; // scale factor
+// //     const friction = 0.95;
+
+// //     const step = () => {
+// //       if (!marqueeRef.current) return;
+// //       if (Math.abs(v) < 0.5) {
+// //         setIsPaused(false);
+// //         return;
+// //       }
+// //       marqueeRef.current.scrollLeft -= v;
+// //       v *= friction;
+// //       momentumFrame.current = requestAnimationFrame(step);
+// //     };
+
+// //     // Only start momentum if there was actual velocity
+// //     if (Math.abs(v) > 0.5) {
+// //       momentumFrame.current = requestAnimationFrame(step);
+// //     } else {
+// //       setIsPaused(false);
+// //     }
+// //   };
+
+// //   return (
+// //     <div className="w-full bg-white border-y border-gray-200 py-4 overflow-hidden select-none">
+
+// //       <div className="relative w-full">
+
+// //         {/* Left fade */}
+// //         <div className="absolute left-0 top-0 bottom-0 w-16 sm:w-24 bg-gradient-to-r from-white to-transparent z-10 pointer-events-none"></div>
+
+// //         {/* Right fade */}
+// //         <div className="absolute right-0 top-0 bottom-0 w-16 sm:w-24 bg-gradient-to-l from-white to-transparent z-10 pointer-events-none"></div>
+
+// //         {/* Marquee Row — draggable both directions */}
+// //         <div
+// //           ref={marqueeRef}
+// //           onMouseDown={handleMouseDown}
+// //           onMouseMove={handleMouseMove}
+// //           onMouseUp={handleMouseUp}
+// //           onMouseLeave={handleMouseLeave}
+// //           onTouchStart={handleTouchStart}
+// //           onTouchMove={handleTouchMove}
+// //           onTouchEnd={handleTouchEnd}
+// //           className={`flex items-center whitespace-nowrap ${
+// //             isDragging ? 'cursor-grabbing' : 'cursor-grab'
+// //           }`}
+// //           style={{
+// //             fontFamily: "'Edu QLD Hand', cursive",
+// //             overflowX: 'auto',
+// //             overflowY: 'hidden',
+// //             scrollbarWidth: 'none',
+// //             msOverflowStyle: 'none',
+// //             WebkitOverflowScrolling: 'touch',
+// //           }}
+// //         >
+// //           {/* Triple copy for wide seamless scroll */}
+// //           <div
+// //             className={`flex items-center whitespace-nowrap ${
+// //               isPaused ? 'animation-paused' : 'animate-marquee'
+// //             }`}
+// //           >
+// //             {/* Copy 1 */}
+// //             <span className="text-black text-base sm:text-lg md:text-xl tracking-wide px-6 sm:px-10">
+// //               {text}
+// //             </span>
+// //             <span className="w-px h-6 sm:h-7 bg-[#009E4D] shrink-0"></span>
+
+// //             {/* Copy 2 */}
+// //             <span className="text-black text-base sm:text-lg md:text-xl tracking-wide px-6 sm:px-10">
+// //               {text}
+// //             </span>
+// //             <span className="w-px h-6 sm:h-7 bg-[#009E4D] shrink-0"></span>
+
+// //             {/* Copy 3 — extra for smooth loop */}
+// //             <span className="text-black text-base sm:text-lg md:text-xl tracking-wide px-6 sm:px-10">
+// //               {text}
+// //             </span>
+// //             <span className="w-px h-6 sm:h-7 bg-[#009E4D] shrink-0"></span>
+// //           </div>
+// //         </div>
+// //       </div>
+
+// //       {/* Marquee animation + hidden scrollbar */}
+// //       <style jsx>{`
+// //         @keyframes marquee {
+// //           from {
+// //             transform: translateX(0);
+// //           }
+// //           to {
+// //             transform: translateX(-33.333%);
+// //           }
+// //         }
+// //         .animate-marquee {
+// //           animation: marquee 60s linear infinite;
+// //         }
+// //         .animation-paused {
+// //           animation: marquee 60s linear infinite;
+// //           animation-play-state: paused;
+// //         }
+// //         /* Hide scrollbar */
+// //         div::-webkit-scrollbar {
+// //           display: none;
+// //         }
+// //       `}</style>
+// //     </div>
+// //   );
+// // };
+
+// // export default MovingBar;
+
+
+// 'use client';
+
+// import React, { useRef, useState, useEffect } from 'react';
+
+// const MovingBar = () => {
+//   const [text, setText] = useState('');
+
+//   const marqueeRef = useRef<HTMLDivElement>(null);
+//   const groupRef = useRef<HTMLDivElement>(null);
+//   const [isDragging, setIsDragging] = useState(false);
+//   const [isPaused, setIsPaused] = useState(false);
+
+//   const dragStartX = useRef(0);
+//   const scrollStartX = useRef(0);
+//   const lastX = useRef(0);
+//   const lastTime = useRef(0);
+//   const velocity = useRef(0);
+//   const momentumFrame = useRef<number | null>(null);
+
+//   // ─── Fetch text ──────────────────────────────────────────
 //   useEffect(() => {
-//     const fetchData = async () => {
-//       const [newsData, imageUrls] = await Promise.all([
-//         client.fetch<NewsItem[]>(newsQuery),
-//         client.fetch<string[]>(newsImageQuery)
-//       ])
-//       setNewsItems(newsData)
-//       setNewsImages(imageUrls)
-//     }
+//     const fetchText = async () => {
+//       try {
+//         const res = await fetch('/api/moving-bar', {
+//           method: 'GET',
+//           cache: 'no-store',
+//         });
+//         const raw = await res.text();
+//         let data: any = {};
+//         try {
+//           data = raw ? JSON.parse(raw) : {};
+//         } catch {
+//           return;
+//         }
+//         if (!res.ok) return;
+//         if (data.text) setText(data.text);
+//       } catch {
+//         /* silent */
+//       }
+//     };
+//     fetchText();
+//   }, []);
 
-//     fetchData()
-//   }, [])
-
-//   const nextSlide = useCallback(() => {
-//     if (!isHovered) {
-//       setCurrentSlide(prev => (prev === newsImages.length - 1 ? 0 : prev + 1))
-//     }
-//   }, [newsImages.length, isHovered])
-
+//   // ─── Cleanup ─────────────────────────────────────────────
 //   useEffect(() => {
-//     const interval = setInterval(() => {
-//       nextSlide()
-//     }, 5000)
+//     return () => {
+//       if (momentumFrame.current) cancelAnimationFrame(momentumFrame.current);
+//     };
+//   }, []);
 
-//     return () => clearInterval(interval)
-//   }, [nextSlide])
+//   // ─── Mouse ───────────────────────────────────────────────
+//   const handleMouseDown = (e: React.MouseEvent) => {
+//     if (!marqueeRef.current) return;
+//     if (momentumFrame.current) {
+//       cancelAnimationFrame(momentumFrame.current);
+//       momentumFrame.current = null;
+//     }
+//     setIsDragging(true);
+//     setIsPaused(true);
 
-//   if (newsItems.length === 0) return null
+//     dragStartX.current = e.pageX;
+//     scrollStartX.current = marqueeRef.current.scrollLeft;
+
+//     lastX.current = e.pageX;
+//     lastTime.current = Date.now();
+//     velocity.current = 0;
+//   };
+
+//   const handleMouseMove = (e: React.MouseEvent) => {
+//     if (!isDragging || !marqueeRef.current) return;
+//     const deltaX = e.pageX - dragStartX.current;
+//     marqueeRef.current.scrollLeft = scrollStartX.current - deltaX;
+
+//     const now = Date.now();
+//     const dt = now - lastTime.current;
+//     if (dt > 0) velocity.current = (e.pageX - lastX.current) / dt;
+//     lastX.current = e.pageX;
+//     lastTime.current = now;
+//   };
+
+//   const handleMouseUp = () => {
+//     if (!isDragging) return;
+//     setIsDragging(false);
+//     startMomentum();
+//   };
+
+//   const handleMouseLeave = () => {
+//     if (isDragging) {
+//       setIsDragging(false);
+//       startMomentum();
+//     }
+//   };
+
+//   // ─── Touch ───────────────────────────────────────────────
+//   const handleTouchStart = (e: React.TouchEvent) => {
+//     if (!marqueeRef.current) return;
+//     if (momentumFrame.current) {
+//       cancelAnimationFrame(momentumFrame.current);
+//       momentumFrame.current = null;
+//     }
+//     setIsDragging(true);
+//     setIsPaused(true);
+
+//     dragStartX.current = e.touches[0].pageX;
+//     scrollStartX.current = marqueeRef.current.scrollLeft;
+//     lastX.current = e.touches[0].pageX;
+//     lastTime.current = Date.now();
+//     velocity.current = 0;
+//   };
+
+//   const handleTouchMove = (e: React.TouchEvent) => {
+//     if (!isDragging || !marqueeRef.current) return;
+//     const deltaX = e.touches[0].pageX - dragStartX.current;
+//     marqueeRef.current.scrollLeft = scrollStartX.current - deltaX;
+
+//     const now = Date.now();
+//     const dt = now - lastTime.current;
+//     if (dt > 0) velocity.current = (e.touches[0].pageX - lastX.current) / dt;
+//     lastX.current = e.touches[0].pageX;
+//     lastTime.current = now;
+//   };
+
+//   const handleTouchEnd = () => {
+//     if (!isDragging) return;
+//     setIsDragging(false);
+//     startMomentum();
+//   };
+
+//   // ─── Momentum ────────────────────────────────────────────
+//   const startMomentum = () => {
+//     let v = velocity.current * 15;
+//     const friction = 0.95;
+
+//     const step = () => {
+//       if (!marqueeRef.current) return;
+//       if (Math.abs(v) < 0.5) {
+//         setIsPaused(false);
+//         momentumFrame.current = null;
+//         return;
+//       }
+//       marqueeRef.current.scrollLeft -= v;
+//       v *= friction;
+//       momentumFrame.current = requestAnimationFrame(step);
+//     };
+
+//     if (Math.abs(v) > 0.5) {
+//       momentumFrame.current = requestAnimationFrame(step);
+//     } else {
+//       setIsPaused(false);
+//     }
+//   };
+
+//   if (!text) return null;
 
 //   return (
-//     <section className={`py-8 md:py-12 px-3 sm:px-4 ${dmsans.className}`}>
-//       <h1 className={`text-2xl sm:text-3xl md:text-4xl font-bold text-black text-center tracking-wider pb-6 sm:pb-8 ${dmsans.className}`}>
-//         News & Awards
-//       </h1>
+//     <div className="w-full bg-white border-y border-gray-200 py-4 overflow-hidden select-none">
 
-//       <div className="max-w-6xl mx-auto flex flex-col lg:flex-row gap-4 sm:gap-6">
-//         {/* News Cards */}
-//         <div className="w-full lg:w-1/2 grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4 order-2 lg:order-1">
-//           {newsItems.map((product, idx) => (
-//             <div key={idx} className="flex flex-col group">
-//               {/* Image at the top */}
-//               {product.images[0]?.asset.url && (
-//                 <div className="h-32 sm:h-36 md:h-40 relative mb-2 overflow-hidden rounded-sm">
-//                   <Image
-//                     src={product.images[0].asset.url}
-//                     alt={product.name}
-//                     fill
-//                     className="object-cover transition-transform duration-300 group-hover:scale-105"
-//                     sizes="(max-width: 640px) 100vw, (max-width: 768px) 50vw, (max-width: 1024px) 33vw, 25vw"
-//                   />
-//                 </div>
-//               )}
-              
-//               {/* Title and Date row below image */}
-//               <div className="flex justify-between items-start mb-1">
-//                 <h3 className={`text-sm sm:text-base font-light tracking-wider text-black leading-tight ${dmsans.className}`}>
-//                   {product.name}
-//                 </h3>
-//                 <p className={`text-xs text-gray-600 whitespace-nowrap pl-2 ${dmsans.className}`}>
-//                   {new Date(product.publishDate).toLocaleDateString('en-US', {
-//                     year: 'numeric',
-//                     month: 'short',
-//                     day: 'numeric'
-//                   })}
-//                 </p>
-//               </div>
-              
-//               {/* Read More button below title/date */}
-//               <div className="mt-1">
-//                 <Link href={`/news/${product.slug}`} passHref>
-//                   <button className={`text-black font-medium px-2 py-1 hover:bg-gray-100 transition uppercase tracking-wider rounded border border-gray-900 flex items-center gap-1 group-hover:translate-x-1 h-6 text-xs w-fit ${dmsans.className}`}>
-//                     <span>Read More</span>
-//                     <FaArrowRight size={10} />
-//                   </button>
-//                 </Link>
-//               </div>
-//             </div>
-//           ))}
-//         </div>
+//       <div className="relative w-full">
 
-//         {/* Image Carousel */}
-//         <div 
-//           className="w-full lg:w-1/2 h-[200px] sm:h-[280px] md:h-[350px] relative bg-gray-100 overflow-hidden rounded-sm order-1 lg:order-2 mb-3 sm:mb-4"
-//           onMouseEnter={() => setIsHovered(true)}
-//           onMouseLeave={() => setIsHovered(false)}
+//         {/* Left fade */}
+//         <div className="absolute left-0 top-0 bottom-0 w-16 sm:w-24 bg-gradient-to-r from-white to-transparent z-10 pointer-events-none"></div>
+
+//         {/* Right fade */}
+//         <div className="absolute right-0 top-0 bottom-0 w-16 sm:w-24 bg-gradient-to-l from-white to-transparent z-10 pointer-events-none"></div>
+
+//         {/* Marquee wrapper */}
+//         <div
+//           ref={marqueeRef}
+//           onMouseDown={handleMouseDown}
+//           onMouseMove={handleMouseMove}
+//           onMouseUp={handleMouseUp}
+//           onMouseLeave={handleMouseLeave}
+//           onTouchStart={handleTouchStart}
+//           onTouchMove={handleTouchMove}
+//           onTouchEnd={handleTouchEnd}
+//           className={`flex items-center whitespace-nowrap ${
+//             isDragging ? 'cursor-grabbing' : 'cursor-grab'
+//           }`}
+//           style={{
+//             fontFamily: "'Edu QLD Hand', cursive",
+//             overflowX: 'auto',
+//             overflowY: 'hidden',
+//             scrollbarWidth: 'none',
+//             msOverflowStyle: 'none',
+//             WebkitOverflowScrolling: 'touch',
+//           }}
 //         >
-//           {newsImages.map((imageUrl, index) => (
-//             <div
-//               key={index}
-//               className={`absolute inset-0 transition-opacity duration-500 ${
-//                 index === currentSlide ? 'opacity-100' : 'opacity-0'
-//               }`}
-//             >
-//               <Image
-//                 src={imageUrl}
-//                 alt={`Featured News ${index + 1}`}
-//                 fill
-//                 className="object-cover"
-//                 sizes="(max-width: 1024px) 100vw, 50vw"
-//                 priority={index === currentSlide}
-//               />
-//             </div>
-//           ))}
-
-//           {/* Navigation Dots */}
-//           {newsImages.length > 1 && (
-//             <div className="absolute bottom-2 left-0 right-0 flex justify-center space-x-1">
-//               {newsImages.map((_, index) => (
-//                 <button
-//                   key={index}
-//                   onClick={() => setCurrentSlide(index)}
-//                   className={`h-1 transition-all duration-300 ${
-//                     index === currentSlide ? 'w-4 bg-white' : 'w-2 bg-white/50'
-//                   }`}
-//                   aria-label={`Go to slide ${index + 1}`}
-//                 />
-//               ))}
-//             </div>
-//           )}
+//           {/* ✅ 2 identical groups */}
+//           <div
+//             ref={groupRef}
+//             className={`flex shrink-0 ${isPaused ? 'paused' : 'animating'}`}
+//           >
+//             <Group text={text} />
+//             <Group text={text} />
+//           </div>
 //         </div>
 //       </div>
-//     </section>
-//   )
-// }
+
+//       <style jsx>{`
+//         @keyframes marquee {
+//           from {
+//             transform: translate3d(0, 0, 0);
+//           }
+//           to {
+//             transform: translate3d(-50%, 0, 0);
+//           }
+//         }
+
+//         /* ✅ SPEED YAHAN CONTROL HOTI HAI */
+//         /* 40s = fast | 120s = slow | 180s = very slow */
+//         .animating {
+//           animation: marquee 180s linear infinite;
+//           will-change: transform;
+//         }
+
+//         .paused {
+//           animation: marquee 180s linear infinite;
+//           animation-play-state: paused;
+//           will-change: transform;
+//         }
+
+//         /* Hide scrollbar */
+//         div::-webkit-scrollbar {
+//           display: none;
+//         }
+//       `}</style>
+
+//     </div>
+//   );
+// };
+
+// // ─── ONE group = 3 copies of text ─────────────────────────
+// const Group = ({ text }: { text: string }) => (
+//   <div className="flex shrink-0">
+//     <span className="text-black text-base sm:text-lg md:text-xl tracking-wide px-6 sm:px-10">
+//       {text}
+//     </span>
+//     <span className="w-px h-6 sm:h-7 bg-[#009E4D] shrink-0"></span>
+
+//     <span className="text-black text-base sm:text-lg md:text-xl tracking-wide px-6 sm:px-10">
+//       {text}
+//     </span>
+//     <span className="w-px h-6 sm:h-7 bg-[#009E4D] shrink-0"></span>
+
+//     <span className="text-black text-base sm:text-lg md:text-xl tracking-wide px-6 sm:px-10">
+//       {text}
+//     </span>
+//     <span className="w-px h-6 sm:h-7 bg-[#009E4D] shrink-0"></span>
+//   </div>
+// );
+
+// export default MovingBar;
 
 
+'use client';
 
-'use client'
-import { useEffect, useState, useCallback } from 'react'
-import Image from 'next/image'
-import { FaArrowRight } from 'react-icons/fa'
-import Link from 'next/link'
-import { client } from '@/sanity/lib/client'
-import { DM_Sans } from 'next/font/google'
+import React, { useRef, useState, useEffect } from 'react';
 
-const dmsans = DM_Sans({ 
-  subsets: ['latin'],
-  weight: ['400', '500', '700'],
-})
+// ✅ API response type (replaces `any`)
+type MovingBarApiResponse = {
+  text?: string;
+  error?: string;
+};
 
-const newsQuery = `
-  *[_type == "news"] {
-  _id,
-  _createdAt,
-  _updatedAt,
-  name,
-  "slug": slug.current,
-  description,
-  publishDate,
-  "mainImage": images[0].asset->url,
-  images[] {
-    asset-> {
-      _id,
-      url,
-      metadata {
-        dimensions {
-          width,
-          height,
-          aspectRatio
-        }
-      }
-    }
-  }
-} | order(publishDate desc)
-`
+const MovingBar = () => {
+  const [text, setText] = useState('');
 
-const newsImageQuery = `
-  *[_type == "newsimage"].images[].asset->url
-`
+  const marqueeRef = useRef<HTMLDivElement>(null);
+  const groupRef = useRef<HTMLDivElement>(null);
+  const [isDragging, setIsDragging] = useState(false);
+  const [isPaused, setIsPaused] = useState(false);
 
-interface NewsItem {
-  _id: string
-  name: string
-  slug: string
-  description?: string
-  publishDate: string
-  images: {
-    asset: {
-      url: string
-      metadata: {
-        dimensions: {
-          width: number
-          height: number
-        }
-      }
-    }
-  }[]
-}
+  const dragStartX = useRef(0);
+  const scrollStartX = useRef(0);
+  const lastX = useRef(0);
+  const lastTime = useRef(0);
+  const velocity = useRef(0);
+  const momentumFrame = useRef<number | null>(null);
 
-export default function NewsSection() {
-  const [newsItems, setNewsItems] = useState<NewsItem[]>([])
-  const [newsImages, setNewsImages] = useState<string[]>([])
-  const [currentSlide, setCurrentSlide] = useState(0)
-  const [isHovered, setIsHovered] = useState(false)
-
+  // ─── Fetch text ──────────────────────────────────────────
   useEffect(() => {
-    const fetchData = async () => {
+    const fetchText = async () => {
       try {
-        const [newsData, imageUrls] = await Promise.all([
-          client.fetch<NewsItem[]>(newsQuery),
-          client.fetch<string[]>(newsImageQuery)
-        ])
-        setNewsItems(newsData)
-        // Filter out any empty, null, or undefined URLs
-        setNewsImages(imageUrls.filter(url => url && url.trim() !== ''))
-      } catch (error) {
-        console.error('Error fetching news data:', error)
+        const res = await fetch('/api/moving-bar', {
+          method: 'GET',
+          cache: 'no-store',
+        });
+        const raw = await res.text();
+
+        // ✅ Typed instead of any
+        let data: MovingBarApiResponse = {};
+        try {
+          data = raw ? JSON.parse(raw) : {};
+        } catch {
+          return;
+        }
+        if (!res.ok) return;
+        if (data.text) setText(data.text);
+      } catch {
+        /* silent */
       }
-    }
+    };
+    fetchText();
+  }, []);
 
-    fetchData()
-  }, [])
-
-  const nextSlide = useCallback(() => {
-    if (!isHovered && newsImages.length > 0) {
-      setCurrentSlide(prev => (prev === newsImages.length - 1 ? 0 : prev + 1))
-    }
-  }, [newsImages.length, isHovered])
-
+  // ─── Cleanup ─────────────────────────────────────────────
   useEffect(() => {
-    if (newsImages.length === 0) return
-    
-    const interval = setInterval(() => {
-      nextSlide()
-    }, 5000)
+    return () => {
+      if (momentumFrame.current) cancelAnimationFrame(momentumFrame.current);
+    };
+  }, []);
 
-    return () => clearInterval(interval)
-  }, [nextSlide, newsImages.length])
+  // ─── Mouse ───────────────────────────────────────────────
+  const handleMouseDown = (e: React.MouseEvent) => {
+    if (!marqueeRef.current) return;
+    if (momentumFrame.current) {
+      cancelAnimationFrame(momentumFrame.current);
+      momentumFrame.current = null;
+    }
+    setIsDragging(true);
+    setIsPaused(true);
 
-  if (newsItems.length === 0) return null
+    dragStartX.current = e.pageX;
+    scrollStartX.current = marqueeRef.current.scrollLeft;
+
+    lastX.current = e.pageX;
+    lastTime.current = Date.now();
+    velocity.current = 0;
+  };
+
+  const handleMouseMove = (e: React.MouseEvent) => {
+    if (!isDragging || !marqueeRef.current) return;
+    const deltaX = e.pageX - dragStartX.current;
+    marqueeRef.current.scrollLeft = scrollStartX.current - deltaX;
+
+    const now = Date.now();
+    const dt = now - lastTime.current;
+    if (dt > 0) velocity.current = (e.pageX - lastX.current) / dt;
+    lastX.current = e.pageX;
+    lastTime.current = now;
+  };
+
+  const handleMouseUp = () => {
+    if (!isDragging) return;
+    setIsDragging(false);
+    startMomentum();
+  };
+
+  const handleMouseLeave = () => {
+    if (isDragging) {
+      setIsDragging(false);
+      startMomentum();
+    }
+  };
+
+  // ─── Touch ───────────────────────────────────────────────
+  const handleTouchStart = (e: React.TouchEvent) => {
+    if (!marqueeRef.current) return;
+    if (momentumFrame.current) {
+      cancelAnimationFrame(momentumFrame.current);
+      momentumFrame.current = null;
+    }
+    setIsDragging(true);
+    setIsPaused(true);
+
+    dragStartX.current = e.touches[0].pageX;
+    scrollStartX.current = marqueeRef.current.scrollLeft;
+    lastX.current = e.touches[0].pageX;
+    lastTime.current = Date.now();
+    velocity.current = 0;
+  };
+
+  const handleTouchMove = (e: React.TouchEvent) => {
+    if (!isDragging || !marqueeRef.current) return;
+    const deltaX = e.touches[0].pageX - dragStartX.current;
+    marqueeRef.current.scrollLeft = scrollStartX.current - deltaX;
+
+    const now = Date.now();
+    const dt = now - lastTime.current;
+    if (dt > 0) velocity.current = (e.touches[0].pageX - lastX.current) / dt;
+    lastX.current = e.touches[0].pageX;
+    lastTime.current = now;
+  };
+
+  const handleTouchEnd = () => {
+    if (!isDragging) return;
+    setIsDragging(false);
+    startMomentum();
+  };
+
+  // ─── Momentum ────────────────────────────────────────────
+  const startMomentum = () => {
+    let v = velocity.current * 15;
+    const friction = 0.95;
+
+    const step = () => {
+      if (!marqueeRef.current) return;
+      if (Math.abs(v) < 0.5) {
+        setIsPaused(false);
+        momentumFrame.current = null;
+        return;
+      }
+      marqueeRef.current.scrollLeft -= v;
+      v *= friction;
+      momentumFrame.current = requestAnimationFrame(step);
+    };
+
+    if (Math.abs(v) > 0.5) {
+      momentumFrame.current = requestAnimationFrame(step);
+    } else {
+      setIsPaused(false);
+    }
+  };
+
+  if (!text) return null;
 
   return (
-    <section className={`py-8 md:py-12 px-3 sm:px-4 ${dmsans.className}`}>
-      <h1 className={`text-2xl sm:text-3xl md:text-4xl font-bold text-black text-center tracking-wider pb-6 sm:pb-8 ${dmsans.className}`}>
-        News & Awards
-      </h1>
+    <div className="w-full bg-white border-y border-gray-200 py-4 overflow-hidden select-none">
 
-      <div className="max-w-6xl mx-auto flex flex-col lg:flex-row gap-4 sm:gap-6">
-        {/* News Cards */}
-        <div className="w-full lg:w-1/2 grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4 order-2 lg:order-1">
-          {newsItems.map((product, idx) => (
-            <div key={idx} className="flex flex-col group">
-              {/* Image at the top */}
-              {product.images[0]?.asset.url && (
-                <div className="h-32 sm:h-36 md:h-40 relative mb-2 overflow-hidden rounded-sm">
-                  <Image
-                    src={product.images[0].asset.url}
-                    alt={product.name}
-                    fill
-                    className="object-cover transition-transform duration-300 group-hover:scale-105"
-                    sizes="(max-width: 640px) 100vw, (max-width: 768px) 50vw, (max-width: 1024px) 33vw, 25vw"
-                  />
-                </div>
-              )}
-              
-              {/* Title and Date row below image */}
-              <div className="flex justify-between items-start mb-1">
-                <h3 className={`text-sm sm:text-base font-light tracking-wider text-black leading-tight ${dmsans.className}`}>
-                  {product.name}
-                </h3>
-                <p className={`text-xs text-gray-600 whitespace-nowrap pl-2 ${dmsans.className}`}>
-                  {new Date(product.publishDate).toLocaleDateString('en-US', {
-                    year: 'numeric',
-                    month: 'short',
-                    day: 'numeric'
-                  })}
-                </p>
-              </div>
-              
-              {/* Read More button below title/date */}
-              <div className="mt-1">
-                <Link href={`/news/${product.slug}`} passHref>
-                  <button className={`text-black font-medium px-2 py-1 hover:bg-gray-100 transition uppercase tracking-wider rounded border border-gray-900 flex items-center gap-1 group-hover:translate-x-1 h-6 text-xs w-fit ${dmsans.className}`}>
-                    <span>Read More</span>
-                    <FaArrowRight size={10} />
-                  </button>
-                </Link>
-              </div>
-            </div>
-          ))}
-        </div>
+      <div className="relative w-full">
 
-        {/* Image Carousel - Only render if there are images */}
-        {newsImages.length > 0 && (
-          <div 
-            className="w-full lg:w-1/2 h-[200px] sm:h-[280px] md:h-[350px] relative bg-gray-100 overflow-hidden rounded-sm order-1 lg:order-2 mb-3 sm:mb-4"
-            onMouseEnter={() => setIsHovered(true)}
-            onMouseLeave={() => setIsHovered(false)}
+        {/* Left fade */}
+        <div className="absolute left-0 top-0 bottom-0 w-16 sm:w-24 bg-gradient-to-r from-white to-transparent z-10 pointer-events-none"></div>
+
+        {/* Right fade */}
+        <div className="absolute right-0 top-0 bottom-0 w-16 sm:w-24 bg-gradient-to-l from-white to-transparent z-10 pointer-events-none"></div>
+
+        {/* Marquee wrapper */}
+        <div
+          ref={marqueeRef}
+          onMouseDown={handleMouseDown}
+          onMouseMove={handleMouseMove}
+          onMouseUp={handleMouseUp}
+          onMouseLeave={handleMouseLeave}
+          onTouchStart={handleTouchStart}
+          onTouchMove={handleTouchMove}
+          onTouchEnd={handleTouchEnd}
+          className={`flex items-center whitespace-nowrap ${
+            isDragging ? 'cursor-grabbing' : 'cursor-grab'
+          }`}
+          style={{
+            fontFamily: "'Edu QLD Hand', cursive",
+            overflowX: 'auto',
+            overflowY: 'hidden',
+            scrollbarWidth: 'none',
+            msOverflowStyle: 'none',
+            WebkitOverflowScrolling: 'touch',
+          }}
+        >
+          {/* ✅ 2 identical groups */}
+          <div
+            ref={groupRef}
+            className={`flex shrink-0 ${isPaused ? 'paused' : 'animating'}`}
           >
-            {newsImages.map((imageUrl, index) => (
-              <div
-                key={index}
-                className={`absolute inset-0 transition-opacity duration-500 ${
-                  index === currentSlide ? 'opacity-100' : 'opacity-0'
-                }`}
-              >
-                {imageUrl && (
-                  <Image
-                    src={imageUrl}
-                    alt={`Featured News ${index + 1}`}
-                    fill
-                    className="object-cover"
-                    sizes="(max-width: 1024px) 100vw, 50vw"
-                    priority={index === currentSlide}
-                  />
-                )}
-              </div>
-            ))}
-
-            {/* Navigation Dots - Only show if more than one image */}
-            {newsImages.length > 1 && (
-              <div className="absolute bottom-2 left-0 right-0 flex justify-center space-x-1">
-                {newsImages.map((_, index) => (
-                  <button
-                    key={index}
-                    onClick={() => setCurrentSlide(index)}
-                    className={`h-1 transition-all duration-300 ${
-                      index === currentSlide ? 'w-4 bg-white' : 'w-2 bg-white/50'
-                    }`}
-                    aria-label={`Go to slide ${index + 1}`}
-                  />
-                ))}
-              </div>
-            )}
+            <Group text={text} />
+            <Group text={text} />
           </div>
-        )}
+        </div>
       </div>
-    </section>
-  )
-}
+
+      <style jsx>{`
+        @keyframes marquee {
+          from {
+            transform: translate3d(0, 0, 0);
+          }
+          to {
+            transform: translate3d(-50%, 0, 0);
+          }
+        }
+
+        /* ✅ SPEED YAHAN CONTROL HOTI HAI */
+        /* 40s = fast | 120s = slow | 180s = very slow */
+        .animating {
+          animation: marquee 180s linear infinite;
+          will-change: transform;
+        }
+
+        .paused {
+          animation: marquee 180s linear infinite;
+          animation-play-state: paused;
+          will-change: transform;
+        }
+
+        /* Hide scrollbar */
+        div::-webkit-scrollbar {
+          display: none;
+        }
+      `}</style>
+
+    </div>
+  );
+};
+
+// ─── ONE group = 3 copies of text ─────────────────────────
+const Group = ({ text }: { text: string }) => (
+  <div className="flex shrink-0">
+    <span className="text-black text-base sm:text-lg md:text-xl tracking-wide px-6 sm:px-10">
+      {text}
+    </span>
+    <span className="w-px h-6 sm:h-7 bg-[#009E4D] shrink-0"></span>
+
+    <span className="text-black text-base sm:text-lg md:text-xl tracking-wide px-6 sm:px-10">
+      {text}
+    </span>
+    <span className="w-px h-6 sm:h-7 bg-[#009E4D] shrink-0"></span>
+
+    <span className="text-black text-base sm:text-lg md:text-xl tracking-wide px-6 sm:px-10">
+      {text}
+    </span>
+    <span className="w-px h-6 sm:h-7 bg-[#009E4D] shrink-0"></span>
+  </div>
+);
+
+export default MovingBar;

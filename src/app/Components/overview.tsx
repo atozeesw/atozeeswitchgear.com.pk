@@ -6,71 +6,69 @@ import { FaArrowRight } from 'react-icons/fa';
 
 const dmsans = DM_Sans({ 
   subsets: ['latin'],
-  weight: '700',
+  weight: ['400', '500', '700'],
 });
 
 const Overview = () => {
     return (
-        <section 
-            className="w-full py-12 md:py-20 lg:py-24 px-4 sm:px-6 md:px-8 lg:px-10 relative"
-            style={{
-                backgroundImage: "url('/background-image.jpg')",
-                backgroundSize: "cover",
-                backgroundPosition: "center",
-                backgroundAttachment: "fixed"
-            }}
-        >
-            {/* Semi-transparent overlay for better text readability */}
-            <div className="absolute inset-0 bg-white bg-opacity-90"></div>
-            
-            <div className="flex flex-col lg:flex-row w-full max-w-7xl mx-auto relative z-10">
-                {/* Text Content - Always comes first in DOM for mobile */}
-                <div className="w-full lg:w-1/2 lg:pr-8 xl:pr-10 order-1">
-                    <div className="text-left mb-8 lg:mb-0">
-                        <h1 className={`${dmsans.className} text-2xl sm:text-3xl md:text-4xl font-semibold tracking-wide text-black mb-4 sm:mb-6 md:mb-8 leading-tight`}>
+        <section className="w-full py-16 md:py-24 px-6 md:px-12 lg:px-16 bg-white">
+            <div className="flex flex-col lg:flex-row items-center w-full max-w-7xl mx-auto gap-12 lg:gap-16">
+
+                {/* Text Content — LEFT */}
+                <div className="w-full lg:w-1/2 order-2 lg:order-1 flex flex-col justify-center">
+                    <div className="max-w-xl text-left">
+
+                        {/* Main heading with green underline */}
+                        <h3 className={`${dmsans.className} text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight text-black leading-[1.2] inline-block relative pb-3 mb-8`}>
                             Overview
-                        </h1>
+                            <span className="absolute left-0 bottom-0 w-12 h-0.5 bg-[#009E4D]"></span>
+                        </h3>
 
-                        <div className="relative w-full overflow-hidden mb-6">
-                            <div className="w-full h-px bg-gray-400"></div>
-                        </div>
-
-                        <p className={`text-gray-600 font-light text-sm sm:text-base md:text-lg leading-relaxed tracking-wider mb-6 sm:mb-8 md:mb-10 ${dmsans.className}`}>
-                            <span className={`font-bold text-md sm:text-xl pr-1 text-brownPrimary tracking-wider ${dmsans.className}`}>
+                        {/* Body paragraph */}
+                        <p className={`text-sm md:text-base text-gray-600 leading-7 tracking-normal mb-10 text-justify ${dmsans.className} font-normal`}>
+                            <span className={`font-bold text-black pr-1 ${dmsans.className}`}>
                                 A to Zee Switchgear Engineering
-                            </span> 
+                            </span>
                             is a leading Pakistani manufacturer of high-quality electrical switchgear, control panels, and power distribution solutions. Based in Karachi, the company serves industrial, commercial, and utility sectors with reliable, standards-compliant (IEC, IEEE) products. Known for innovation and precision engineering, A to Zee provides customized electrical solutions backed by strong technical expertise and after-sales support, contributing to Pakistan&apos;s power infrastructure development.
                         </p>
-                        
-                        <div className="relative w-full overflow-hidden mb-6 sm:mb-8 md:mb-10">
-                            <div className="w-full h-px bg-gray-400"></div>
-                        </div>
 
-                        <div className="pt-2">
-                            <Link href="/about" passHref>
-                                <button className={`text-black font-semibold px-4 py-2 sm:px-4 sm:py-3 bg-white hover:bg-gray-100 transition uppercase tracking-wider border border-gray-900 flex items-center gap-2 group ${dmsans.className}`}>
-                                    READ MORE
-                                    <FaArrowRight className="group-hover:translate-x-1 transition-transform" size={14} />
-                                </button>
+                        {/* Divider */}
+                        <div className="w-full h-px bg-gray-200 mb-8"></div>
+
+                        {/* Read More button */}
+                        <div>
+                            <Link href="/about" passHref className="inline-block">
+                                <span className={`inline-flex items-center gap-2 text-black font-semibold text-xs md:text-sm px-6 py-3 bg-transparent border-2 border-black hover:bg-[#009E4D] hover:border-[#009E4D] hover:text-white transition-all duration-200 uppercase tracking-wider rounded-full group ${dmsans.className}`}>
+                                    Read More
+                                    <FaArrowRight className="group-hover:translate-x-1 transition-transform" size={12} />
+                                </span>
                             </Link>
                         </div>
                     </div>
                 </div>
 
-                {/* Video Section - Comes after text in DOM for mobile, positioned on right for desktop */}
-                <div className="w-full lg:w-1/2 lg:pl-8 xl:pl-10 order-2 mt-8 lg:mt-0">
-                    <div className="relative h-64 sm:h-80 md:h-[26rem] lg:h-[29rem] w-full overflow-hidden rounded-lg">
-                        <iframe 
-                            src="https://www.youtube.com/embed/vroQG-xw1QI?si=D8iYi-fq11jvLSeE" 
-                            title="YouTube video player" 
-                            frameBorder="0" 
-                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
-                            referrerPolicy="strict-origin-when-cross-origin" 
+                {/* Video Section — RIGHT */}
+                <div className="w-full lg:w-1/2 order-1 lg:order-2">
+                    <div className="relative w-full h-[220px] sm:h-[300px] md:h-[380px] lg:h-[420px] overflow-hidden rounded-lg border border-gray-200 shadow-sm bg-black">
+                        <iframe
+                            src="https://www.youtube-nocookie.com/embed/vroQG-xw1QI?rel=0&modestbranding=1&playsinline=1"
+                            title="A to Zee Switchgear Engineering Overview"
+                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                            referrerPolicy="strict-origin-when-cross-origin"
                             allowFullScreen
-                            className="w-full h-full object-cover"
+                            loading="lazy"
+                            style={{
+                                position: 'absolute',
+                                top: 0,
+                                left: 0,
+                                width: '100%',
+                                height: '100%',
+                                border: 0,
+                            }}
                         ></iframe>
                     </div>
                 </div>
+
             </div>
         </section>
     );

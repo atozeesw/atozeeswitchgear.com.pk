@@ -42,15 +42,15 @@
 "use client"
 import { ReactElement } from 'react';
 import Products from "./Components/product";
-import TopBar from "./Components/topbar";
+// import TopBar from "./Components/topbar";
 import Navbar from "./Components/navbar";
 import Footer from "./Components/footer";
-import Hero from "@/app/Components/hero";
+// import Hero from "@/app/Components/hero";
 import Overview from "./Components/overview";
 import Banner from "./Components/quality-safety-inovation";
 import NewsSection from "./Components/news";
 import ScrollToTopButton from './Components/scroll';
-import FirstTimeAd from './Components/FirstTimeAd';
+// import FirstTimeAd from './Components/FirstTimeAd';
 
 interface PageComponent {
   component: ReactElement;
@@ -60,16 +60,16 @@ interface PageComponent {
 export default function Home() {
   // Organized components in order of appearance
   const pageComponents: PageComponent[] = [
-    { component: <TopBar key="topbar" /> },
+    // { component: <TopBar key="topbar" /> },
     { component: <Navbar key="navbar" /> },
-    { component: <Hero key="hero" />, priority: true },
+    // { component: <Hero key="hero" />, priority: true },
     { component: <Overview key="overview" /> },
+        { component: <NewsSection key="news" /> },
     { component: <Products key="products" /> },
     { component: <Banner key="banner" /> },
-    { component: <NewsSection key="news" /> },
     { component: <ScrollToTopButton key="scroll" /> },
     { component: <Footer key="footer" /> },
-    { component: <FirstTimeAd key="ad" /> }
+    // { component: <FirstTimeAd key="ad" /> }
   ];
 
   return (

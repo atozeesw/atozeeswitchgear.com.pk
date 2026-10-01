@@ -1,293 +1,592 @@
 // 'use client';
-// import React from 'react';
+
+// import React, { useState, useEffect } from 'react';
 // import Image from 'next/image';
+// import { FiX } from 'react-icons/fi';
+// import { DM_Sans } from 'next/font/google';
 
-// const products = [
-//   {
-//     title: 'Low Voltage Switchgear',
-//     image: '/p111.png',
-//     link: '/products/power-distribution',
-//   },
-//   {
-//     title: 'BlokSeT',
-//     image: '/p111.png',
-//     link: '/products/energy-management',
-//     logo: '/s1.png'
-//   },
-//   {
-//     title: 'PrismaSeT',
-//     image: '/p111.png',
-//     link: '/products/protection-devices',
-//     logo: '/s1.png'
-//   },
-//   {
-//     title: 'Spacial SF Universal Enclosure',
-//     image: '/p111.png',
-//     link: '/products/protection-devices',
-//     logo: '/s1.png'
-//   },
-//   {
-//     title: 'Medium Voltage Switchgear',
-//     image: '/p111.png',
-//     link: '/products/control-panels',
-//   },
-//   {
-//     title: 'Distribution Box',
-//     image: '/p111.png',
-//     link: '/products/distribution-boards',
-//   },
-//   {
-//     title: 'Synchronization Panel',
-//     image: '/p111.png',
-//     link: '/products/synchronization',
-//   },
-//   {
-//     title: 'Active Harmonic Filter Solution',
-//     image: '/p111.png',
-//     link: '/products/harmonic-filters',
-//   },
-//   {
-//     title: 'KIOSK Substations',
-//     image: '/p111.png',
-//     link: '/products/substations',
-//   },
-//   {
-//     title: 'Low Voltage Busway System',
-//     image: '/p111.png',
-//     link: '/products/busway-systems',
-//   },
-//   {
-//     title: 'Dry Type Transformer',
-//     image: '/p111.png',
-//     link: '/products/transformers',
-//   },
-//   {
-//     title: 'VSD (Variable Speed Drives)',
-//     image: '/p111.png',
-//     link: '/products/variable-speed-drives',
-//   }
-// ];
+// const dmsans = DM_Sans({
+//   subsets: ['latin'],
+//   weight: ['400', '500', '700'],
+// });
 
-// export default function Products() {
+// // ─── Types ──────────────────────────────────────────────────
+// type ProductRow = {
+//   id: number;
+//   product_image: string | null;
+//   product_title: string;
+//   brand_image: string | null;
+// };
+
+// export default function ProductsPage() {
+//   const [mounted, setMounted] = useState(false);
+//   const [products, setProducts] = useState<ProductRow[]>([]);
+//   const [loading, setLoading] = useState(true);
+//   const [lightboxImage, setLightboxImage] = useState<string | null>(null);
+//   const [lightboxTitle, setLightboxTitle] = useState<string>('');
+
+//   useEffect(() => {
+//     setMounted(true);
+//   }, []);
+
+//   // ─── Fetch from /api/our-solutions ────────────────────────
+//   useEffect(() => {
+//     if (!mounted) return;
+
+//     let isMounted = true;
+
+//     const fetchProducts = async () => {
+//       try {
+//         const res = await fetch('/api/our-solutions', {
+//           method: 'GET',
+//           cache: 'no-store',
+//         });
+
+//         const raw = await res.text();
+//         let data: any = {};
+//         try {
+//           data = raw ? JSON.parse(raw) : {};
+//         } catch {
+//           console.error('Non-JSON response:', raw);
+//           return;
+//         }
+
+//         if (!res.ok) {
+//           console.error('API error:', data.error || res.statusText);
+//           return;
+//         }
+
+//         if (isMounted && Array.isArray(data.products)) {
+//           setProducts(data.products);
+//         }
+//       } catch (err) {
+//         console.error('Failed to fetch products:', err);
+//       } finally {
+//         if (isMounted) setLoading(false);
+//       }
+//     };
+
+//     fetchProducts();
+
+//     return () => {
+//       isMounted = false;
+//     };
+//   }, [mounted]);
+
+//   // Close lightbox on Escape
+//   useEffect(() => {
+//     const handleEsc = (e: KeyboardEvent) => {
+//       if (e.key === 'Escape') setLightboxImage(null);
+//     };
+//     window.addEventListener('keydown', handleEsc);
+//     return () => window.removeEventListener('keydown', handleEsc);
+//   }, []);
+
+//   // Prevent body scroll when lightbox open
+//   useEffect(() => {
+//     if (lightboxImage) {
+//       document.body.style.overflow = 'hidden';
+//     } else {
+//       document.body.style.overflow = '';
+//     }
+//     return () => {
+//       document.body.style.overflow = '';
+//     };
+//   }, [lightboxImage]);
+
+//   const openLightbox = (image: string, title: string) => {
+//     setLightboxImage(image);
+//     setLightboxTitle(title);
+//   };
+
+//   const closeLightbox = () => {
+//     setLightboxImage(null);
+//     setLightboxTitle('');
+//   };
+
 //   return (
-//     <section className="py-16 md:py-24 bg-gradient-to-br from-white to-gray-50 font-sans">
-//       {/* Banner Section */}
-//       <div className="relative w-screen h-80 md:h-96 lg:h-[30rem] mb-12 -ml-4 sm:-ml-6">
-//         <Image
-//           src="/product2.png"
-//           alt="Products Banner"
-//           layout="fill"
-//           objectFit="cover"
-//           className="brightness-75 object-left"
-//           priority
-//         />
-//         <div className="absolute inset-0 flex flex-col items-center justify-center">
-//           <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold font-serif text-white text-center px-4 tracking-wider shadow-lg">
-//             &quot;OUR PRODUCTS&quot;
-//           </h1>
-//           <p className="text-center text-white text-base sm:text-lg md:text-xl font-light mt-4 max-w-xs sm:max-w-md md:max-w-2xl mx-auto tracking-wide md:tracking-widest px-4">
-//             Explore our trusted range of switchgear and power management solutions.
+//     <>
+//       <section className={`bg-white overflow-hidden ${dmsans.className}`}>
+//         <div className="container mx-auto px-6 sm:px-8 md:px-12 py-16 md:py-24">
+//           {/* Heading */}
+//           <div className="text-center mb-12 md:mb-16">
+//             <h3 className="text-2xl sm:text-3xl md:text-4xl font-bold text-black tracking-tight">
+//               Our Solutions
+//             </h3>
+//           </div>
+
+//           {/* Grid */}
+//           {!mounted ? (
+//             <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-5 md:gap-6 lg:gap-8">
+//               {[1, 2, 3, 4, 5, 6, 7, 8].map((i) => (
+//                 <div
+//                   key={i}
+//                   className="bg-white border border-gray-200 rounded-lg overflow-hidden flex flex-col h-full"
+//                 >
+//                   <div className="w-full h-36 sm:h-44 md:h-52 lg:h-60 bg-gray-100" />
+//                   <div className="p-3 sm:p-4 flex flex-col items-center gap-2">
+//                     <div className="h-3 w-3/4 bg-gray-200 rounded" />
+//                     <div className="h-0.5 w-8 bg-gray-200 rounded" />
+//                   </div>
+//                 </div>
+//               ))}
+//             </div>
+//           ) : loading ? (
+//             <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-5 md:gap-6 lg:gap-8">
+//               {[1, 2, 3, 4, 5, 6, 7, 8].map((i) => (
+//                 <div
+//                   key={i}
+//                   className="bg-white border border-gray-200 rounded-lg overflow-hidden flex flex-col h-full animate-pulse"
+//                 >
+//                   <div className="w-full h-36 sm:h-44 md:h-52 lg:h-60 bg-gray-100" />
+//                   <div className="p-3 sm:p-4 flex flex-col items-center gap-2">
+//                     <div className="h-3 w-3/4 bg-gray-200 rounded" />
+//                     <div className="h-0.5 w-8 bg-gray-200 rounded" />
+//                   </div>
+//                 </div>
+//               ))}
+//             </div>
+//           ) : products.length === 0 ? (
+//             <div className="text-center py-12">
+//               <p className="text-gray-500 text-sm sm:text-base">
+//                 No products available yet.
+//               </p>
+//             </div>
+//           ) : (
+//             <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-5 md:gap-6 lg:gap-8">
+//               {products.map((product) => {
+//                 const image = product.product_image || '';
+//                 const title = product.product_title;
+//                 const logo = product.brand_image;
+
+//                 const card = (
+//                   <div className="group relative bg-white border border-gray-200 shadow-sm hover:shadow-lg hover:border-[#009E4D]/30 transition-all duration-300 rounded-lg overflow-hidden flex flex-col h-full">
+//                     {logo && logo.trim() !== '' && (
+//                       <div className="absolute top-0 left-0 z-10 bg-white p-1.5 shadow-sm border-b border-r border-gray-200 rounded-br-md">
+//                         <Image
+//                           src={logo}
+//                           alt="Brand logo"
+//                           width={80}
+//                           height={32}
+//                           className="h-5 sm:h-6 md:h-7 w-auto object-contain"
+//                         />
+//                       </div>
+//                     )}
+
+//                     <button
+//                       type="button"
+//                       onClick={() => openLightbox(image, title)}
+//                       className="relative w-full h-36 sm:h-44 md:h-52 lg:h-60 p-3 sm:p-4 flex items-center justify-center bg-gray-50 overflow-hidden cursor-zoom-in"
+//                       aria-label={`View ${title} larger`}
+//                     >
+//                       {image ? (
+//                         <Image
+//                           src={image}
+//                           alt={`${title} product illustration`}
+//                           width={280}
+//                           height={240}
+//                           className="max-h-full max-w-full object-contain transition-transform duration-500 group-hover:scale-105"
+//                         />
+//                       ) : (
+//                         <div className="text-gray-400 text-xs">No image</div>
+//                       )}
+
+//                       <div className="absolute bottom-0 left-0 w-0 h-0.5 bg-[#009E4D] group-hover:w-full transition-all duration-500"></div>
+//                     </button>
+
+//                     <div className="p-3 sm:p-4 flex-grow flex flex-col items-center justify-center text-center">
+//                       <h4 className="text-xs sm:text-sm md:text-base font-bold text-black group-hover:text-[#009E4D] transition-colors duration-200 leading-tight">
+//                         {title}
+//                       </h4>
+//                       <span className="block w-8 h-0.5 bg-gray-200 group-hover:bg-[#009E4D] group-hover:w-12 transition-all duration-300 mt-2"></span>
+//                     </div>
+//                   </div>
+//                 );
+
+//                 return (
+//                   <div key={product.id} className="h-full cursor-default">
+//                     {card}
+//                   </div>
+//                 );
+//               })}
+//             </div>
+//           )}
+//         </div>
+//       </section>
+
+//       {/* Lightbox Modal */}
+//       {lightboxImage && (
+//         <div
+//           className="fixed inset-0 z-[100] bg-black/90 flex items-center justify-center p-4 sm:p-8 animate-fade-in"
+//           onClick={closeLightbox}
+//           role="dialog"
+//           aria-modal="true"
+//           aria-label="Image preview"
+//         >
+//           <button
+//             type="button"
+//             onClick={closeLightbox}
+//             className="absolute top-4 right-4 sm:top-6 sm:right-6 z-10 w-10 h-10 sm:w-12 sm:h-12 flex items-center justify-center rounded-full bg-white/10 hover:bg-[#009E4D] backdrop-blur-sm border border-white/20 hover:border-[#009E4D] text-white transition-all duration-200 group"
+//             aria-label="Close image preview"
+//           >
+//             <FiX className="w-5 h-5 sm:w-6 sm:h-6 group-hover:rotate-90 transition-transform duration-300" />
+//           </button>
+
+//           <div
+//             className="relative max-w-5xl max-h-[85vh] w-full h-full flex flex-col items-center justify-center"
+//             onClick={(e) => e.stopPropagation()}
+//           >
+//             <div className="relative w-full h-full">
+//               <Image
+//                 src={lightboxImage}
+//                 alt={lightboxTitle}
+//                 fill
+//                 className="object-contain animate-zoom-in"
+//                 sizes="100vw"
+//                 priority
+//               />
+//             </div>
+
+//             {lightboxTitle && (
+//               <p className="mt-4 text-white text-sm sm:text-base md:text-lg font-semibold tracking-wider text-center px-4">
+//                 {lightboxTitle}
+//               </p>
+//             )}
+//           </div>
+
+//           <p className="absolute bottom-4 left-1/2 -translate-x-1/2 text-white/50 text-xs tracking-wider hidden sm:block">
+//             Press ESC or click outside to close
 //           </p>
 //         </div>
-//       </div>
+//       )}
 
-//       <div className="container mx-auto px-4 sm:px-6">
-//         <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6 pt-8 md:pt-10">
-//           {products.map((product, index) => (
-//             <div
-//               key={index}
-//               className="w-full group relative"
-//               data-aos="fade-up"
-//               data-aos-delay={index * 100}
-//             >
-//               {product.logo && (
-//                 <div className="absolute top-0 left-0 z-10 bg-white p-1 md:p-2 shadow-sm md:shadow-md border-b border-r border-black rounded-br-md md:rounded-br-lg">
-//                   <Image
-//                     src={product.logo}
-//                     alt="Brand logo"
-//                     width={80}
-//                     height={32}
-//                     className="h-6 md:h-8 w-auto object-contain"
-//                   />
-//                 </div>
-//               )}
-
-//               <a
-//                 href={product.link}
-//                 className={`h-full bg-white rounded-sm shadow-sm md:shadow-md lg:shadow-lg border border-black hover:shadow-md md:hover:shadow-lg lg:hover:shadow-xl transition duration-300 block flex flex-col ${product.logo ? 'pt-6 md:pt-8' : ''}`}
-//               >
-//                 <div className="w-full h-40 sm:h-48 md:h-56 lg:h-64 p-2 md:p-3 lg:p-4 flex items-center justify-center bg-[#F9F9F9] rounded-t-sm md:rounded-t-lg border-b border-black relative overflow-hidden">
-//                   <Image
-//                     src={product.image}
-//                     alt={`${product.title} product illustration`}
-//                     width={300}
-//                     height={256}
-//                     className="max-h-full max-w-full object-contain transition-transform duration-500 group-hover:scale-105"
-//                   />
-//                 </div>
-//                 <div className="p-3 md:p-4 lg:p-6 text-center flex-grow">
-//                   <h3 className="text-sm sm:text-base md:text-lg lg:text-xl font-light tracking-wider text-black group-hover:text-black transition-colors mb-1 md:mb-2">
-//                     {product.title}
-//                   </h3>
-//                 </div>
-//               </a>
-//             </div>
-//           ))}
-//         </div>
-//       </div>
-//     </section>
+//       <style jsx global>{`
+//         @keyframes fade-in {
+//           from {
+//             opacity: 0;
+//           }
+//           to {
+//             opacity: 1;
+//           }
+//         }
+//         @keyframes zoom-in {
+//           from {
+//             opacity: 0;
+//             transform: scale(0.9);
+//           }
+//           to {
+//             opacity: 1;
+//             transform: scale(1);
+//           }
+//         }
+//         .animate-fade-in {
+//           animation: fade-in 0.25s ease-out forwards;
+//         }
+//         .animate-zoom-in {
+//           animation: zoom-in 0.35s ease-out forwards;
+//         }
+//       `}</style>
+//     </>
 //   );
 // }
 
 
-
-
 'use client';
-import React from 'react';
+
+import React, { useState, useEffect } from 'react';
 import Image from 'next/image';
+import { FiX } from 'react-icons/fi';
 import { DM_Sans } from 'next/font/google';
 
-const dmsans = DM_Sans({ 
+const dmsans = DM_Sans({
   subsets: ['latin'],
-  weight: '700',
+  weight: ['400', '500', '700'],
 });
 
-const products = [
-  {
-    title: 'Low Voltage Switchgear',
-    image: '/p111.png',
-    link: '/products/power-distribution',
-  },
-  {
-    title: 'BlokSeT',
-    image: '/p111.png',
-    link: '/products/energy-management',
-    logo: '/s1.png'
-  },
-  {
-    title: 'PrismaSeT',
-    image: '/p111.png',
-    link: '/products/protection-devices',
-    logo: '/s1.png'
-  },
-  {
-    title: 'Spacial SF Universal Enclosure',
-    image: '/p111.png',
-    link: '/products/protection-devices',
-    logo: '/s1.png'
-  },
-  {
-    title: 'Medium Voltage Switchgear',
-    image: '/p111.png',
-    link: '/products/control-panels',
-    logo: '/s1.png'
+// ─── Types ──────────────────────────────────────────────────
+type ProductRow = {
+  id: number;
+  product_image: string | null;
+  product_title: string;
+  brand_image: string | null;
+};
 
-  },
-  {
-    title: 'Distribution Box',
-    image: '/p111.png',
-    link: '/products/distribution-boards',
-  },
-  {
-    title: 'Synchronization Panel',
-    image: '/p111.png',
-    link: '/products/synchronization',
-  },
-  {
-    title: 'Active Harmonic Filter Solution',
-    image: '/p111.png',
-    link: '/products/harmonic-filters',
-  },
-  {
-    title: 'KIOSK Substations',
-    image: '/p111.png',
-    link: '/products/substations',
-  },
-  {
-    title: 'Low Voltage Busway System',
-    image: '/p111.png',
-    link: '/products/busway-systems',
-  },
-  {
-    title: 'Dry Type Transformer',
-    image: '/p111.png',
-    link: '/products/transformers',
-  },
-  {
-    title: 'VSD (Variable Speed Drives)',
-    image: '/p111.png',
-    link: '/products/variable-speed-drives',
-  }
-];
+// ✅ API response type (replaces `any`)
+type OurSolutionsApiResponse = {
+  products?: ProductRow[];
+  error?: string;
+};
 
-export default function Products() {
+export default function ProductsPage() {
+  const [mounted, setMounted] = useState(false);
+  const [products, setProducts] = useState<ProductRow[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [lightboxImage, setLightboxImage] = useState<string | null>(null);
+  const [lightboxTitle, setLightboxTitle] = useState<string>('');
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  // ─── Fetch from /api/our-solutions ────────────────────────
+  useEffect(() => {
+    if (!mounted) return;
+
+    let isMounted = true;
+
+    const fetchProducts = async () => {
+      try {
+        const res = await fetch('/api/our-solutions', {
+          method: 'GET',
+          cache: 'no-store',
+        });
+
+        const raw = await res.text();
+
+        // ✅ Typed instead of any
+        let data: OurSolutionsApiResponse = {};
+        try {
+          data = raw ? JSON.parse(raw) : {};
+        } catch {
+          console.error('Non-JSON response:', raw);
+          return;
+        }
+
+        if (!res.ok) {
+          console.error('API error:', data.error || res.statusText);
+          return;
+        }
+
+        if (isMounted && Array.isArray(data.products)) {
+          setProducts(data.products);
+        }
+      } catch (err) {
+        console.error('Failed to fetch products:', err);
+      } finally {
+        if (isMounted) setLoading(false);
+      }
+    };
+
+    fetchProducts();
+
+    return () => {
+      isMounted = false;
+    };
+  }, [mounted]);
+
+  // Close lightbox on Escape
+  useEffect(() => {
+    const handleEsc = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') setLightboxImage(null);
+    };
+    window.addEventListener('keydown', handleEsc);
+    return () => window.removeEventListener('keydown', handleEsc);
+  }, []);
+
+  // Prevent body scroll when lightbox open
+  useEffect(() => {
+    if (lightboxImage) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+    }
+    return () => {
+      document.body.style.overflow = '';
+    };
+  }, [lightboxImage]);
+
+  const openLightbox = (image: string, title: string) => {
+    setLightboxImage(image);
+    setLightboxTitle(title);
+  };
+
+  const closeLightbox = () => {
+    setLightboxImage(null);
+    setLightboxTitle('');
+  };
+
   return (
-    <section className={`py-12 md:py-20 bg-gradient-to-br from-white to-gray-50 overflow-hidden ${dmsans.className}`}>
-      {/* Banner Section - Full width with no right padding */}
-      <div className="relative w-full h-64 md:h-80 lg:h-[28rem] xl:h-[32rem] mb-12 md:mb-16">
-        <div className="absolute inset-0 w-screen">
-          <Image
-            src="/product2.png"
-            alt="Products Banner"
-            layout="fill"
-            objectFit="cover"
-            className="brightness-75 object-left"
-            priority
-          />
+    <>
+      <section className={`bg-white overflow-hidden ${dmsans.className}`}>
+        <div className="container mx-auto px-6 sm:px-8 md:px-12 py-16 md:py-24">
+          {/* Heading */}
+          <div className="text-center mb-12 md:mb-16">
+            <h3 className="text-2xl sm:text-3xl md:text-4xl font-bold text-black tracking-tight">
+              Our Solutions
+            </h3>
+          </div>
+
+          {/* Grid */}
+          {!mounted ? (
+            <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-5 md:gap-6 lg:gap-8">
+              {[1, 2, 3, 4, 5, 6, 7, 8].map((i) => (
+                <div
+                  key={i}
+                  className="bg-white border border-gray-200 rounded-lg overflow-hidden flex flex-col h-full"
+                >
+                  <div className="w-full h-36 sm:h-44 md:h-52 lg:h-60 bg-gray-100" />
+                  <div className="p-3 sm:p-4 flex flex-col items-center gap-2">
+                    <div className="h-3 w-3/4 bg-gray-200 rounded" />
+                    <div className="h-0.5 w-8 bg-gray-200 rounded" />
+                  </div>
+                </div>
+              ))}
+            </div>
+          ) : loading ? (
+            <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-5 md:gap-6 lg:gap-8">
+              {[1, 2, 3, 4, 5, 6, 7, 8].map((i) => (
+                <div
+                  key={i}
+                  className="bg-white border border-gray-200 rounded-lg overflow-hidden flex flex-col h-full animate-pulse"
+                >
+                  <div className="w-full h-36 sm:h-44 md:h-52 lg:h-60 bg-gray-100" />
+                  <div className="p-3 sm:p-4 flex flex-col items-center gap-2">
+                    <div className="h-3 w-3/4 bg-gray-200 rounded" />
+                    <div className="h-0.5 w-8 bg-gray-200 rounded" />
+                  </div>
+                </div>
+              ))}
+            </div>
+          ) : products.length === 0 ? (
+            <div className="text-center py-12">
+              <p className="text-gray-500 text-sm sm:text-base">
+                No products available yet.
+              </p>
+            </div>
+          ) : (
+            <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-5 md:gap-6 lg:gap-8">
+              {products.map((product) => {
+                const image = product.product_image || '';
+                const title = product.product_title;
+                const logo = product.brand_image;
+
+                const card = (
+                  <div className="group relative bg-white border border-gray-200 shadow-sm hover:shadow-lg hover:border-[#009E4D]/30 transition-all duration-300 rounded-lg overflow-hidden flex flex-col h-full">
+                    {logo && logo.trim() !== '' && (
+                      <div className="absolute top-0 left-0 z-10 bg-white p-1.5 shadow-sm border-b border-r border-gray-200 rounded-br-md">
+                        <Image
+                          src={logo}
+                          alt="Brand logo"
+                          width={80}
+                          height={32}
+                          className="h-5 sm:h-6 md:h-7 w-auto object-contain"
+                        />
+                      </div>
+                    )}
+
+                    <button
+                      type="button"
+                      onClick={() => openLightbox(image, title)}
+                      className="relative w-full h-36 sm:h-44 md:h-52 lg:h-60 p-3 sm:p-4 flex items-center justify-center bg-gray-50 overflow-hidden cursor-zoom-in"
+                      aria-label={`View ${title} larger`}
+                    >
+                      {image ? (
+                        <Image
+                          src={image}
+                          alt={`${title} product illustration`}
+                          width={280}
+                          height={240}
+                          className="max-h-full max-w-full object-contain transition-transform duration-500 group-hover:scale-105"
+                        />
+                      ) : (
+                        <div className="text-gray-400 text-xs">No image</div>
+                      )}
+
+                      <div className="absolute bottom-0 left-0 w-0 h-0.5 bg-[#009E4D] group-hover:w-full transition-all duration-500"></div>
+                    </button>
+
+                    <div className="p-3 sm:p-4 flex-grow flex flex-col items-center justify-center text-center">
+                      <h4 className="text-xs sm:text-sm md:text-base font-bold text-black group-hover:text-[#009E4D] transition-colors duration-200 leading-tight">
+                        {title}
+                      </h4>
+                      <span className="block w-8 h-0.5 bg-gray-200 group-hover:bg-[#009E4D] group-hover:w-12 transition-all duration-300 mt-2"></span>
+                    </div>
+                  </div>
+                );
+
+                return (
+                  <div key={product.id} className="h-full cursor-default">
+                    {card}
+                  </div>
+                );
+              })}
+            </div>
+          )}
         </div>
-        <div className="relative container mx-auto px-4 sm:px-6 h-full flex flex-col items-center justify-center">
-          <h1 className={`text-3xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-white text-center px-4 tracking-wider ${dmsans.className}`}>
-            OUR PRODUCTS
-          </h1>
-          <p className={`text-center text-white text-base sm:text-md md:text-lg font-light mt-4 max-w-xs sm:max-w-md md:max-w-2xl mx-auto tracking-wide md:tracking-widest px-4 ${dmsans.className}`}>
-            Explore our trusted range of switchgear and power management solutions.
+      </section>
+
+      {/* Lightbox Modal */}
+      {lightboxImage && (
+        <div
+          className="fixed inset-0 z-[100] bg-black/90 flex items-center justify-center p-4 sm:p-8 animate-fade-in"
+          onClick={closeLightbox}
+          role="dialog"
+          aria-modal="true"
+          aria-label="Image preview"
+        >
+          <button
+            type="button"
+            onClick={closeLightbox}
+            className="absolute top-4 right-4 sm:top-6 sm:right-6 z-10 w-10 h-10 sm:w-12 sm:h-12 flex items-center justify-center rounded-full bg-white/10 hover:bg-[#009E4D] backdrop-blur-sm border border-white/20 hover:border-[#009E4D] text-white transition-all duration-200 group"
+            aria-label="Close image preview"
+          >
+            <FiX className="w-5 h-5 sm:w-6 sm:h-6 group-hover:rotate-90 transition-transform duration-300" />
+          </button>
+
+          <div
+            className="relative max-w-5xl max-h-[85vh] w-full h-full flex flex-col items-center justify-center"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="relative w-full h-full">
+              <Image
+                src={lightboxImage}
+                alt={lightboxTitle}
+                fill
+                className="object-contain animate-zoom-in"
+                sizes="100vw"
+                priority
+              />
+            </div>
+
+            {lightboxTitle && (
+              <p className="mt-4 text-white text-sm sm:text-base md:text-lg font-semibold tracking-wider text-center px-4">
+                {lightboxTitle}
+              </p>
+            )}
+          </div>
+
+          <p className="absolute bottom-4 left-1/2 -translate-x-1/2 text-white/50 text-xs tracking-wider hidden sm:block">
+            Press ESC or click outside to close
           </p>
         </div>
-      </div>
+      )}
 
-      {/* Products Grid */}
-      <div className="container mx-auto px-4 sm:px-6">
-        <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4 md:gap-5 lg:gap-6">
-          {products.map((product, index) => (
-            <div
-              key={index}
-              className="w-full group relative"
-            >
-              {product.logo && (
-                <div className="absolute top-0 left-0 z-10 bg-white p-1 sm:p-2 shadow-sm border-b border-r border-gray-800 rounded-br-sm sm:rounded-br-md">
-                  <Image
-                    src={product.logo}
-                    alt="Brand logo"
-                    width={80}
-                    height={32}
-                    className="h-5 sm:h-6 md:h-7 w-auto object-contain"
-                  />
-                </div>
-              )}
-
-              <a
-                href={product.link}
-                className={`h-full bg-white rounded-sm shadow-sm hover:shadow-md border border-gray-300 hover:border-gray-400 transition-all duration-300 block flex flex-col ${product.logo ? 'pt-5 sm:pt-6 md:pt-7' : ''}`}
-              >
-                <div className="w-full h-32 sm:h-40 md:h-48 lg:h-56 p-2 sm:p-3 flex items-center justify-center bg-gray-50 rounded-t-sm border-b border-gray-300 relative overflow-hidden">
-                  <Image
-                    src={product.image}
-                    alt={`${product.title} product illustration`}
-                    width={280}
-                    height={240}
-                    className="max-h-full max-w-full object-contain transition-transform duration-500 group-hover:scale-105"
-                  />
-                </div>
-                <div className="p-2 sm:p-3 md:p-4 text-center flex-grow flex items-center justify-center">
-                  <h3 className={`text-xs sm:text-sm md:text-base font-medium text-gray-800 group-hover:text-black transition-colors ${dmsans.className}`}>
-                    {product.title}
-                  </h3>
-                </div>
-              </a>
-            </div>
-          ))}
-        </div>
-      </div>
-    </section>
+      <style jsx global>{`
+        @keyframes fade-in {
+          from {
+            opacity: 0;
+          }
+          to {
+            opacity: 1;
+          }
+        }
+        @keyframes zoom-in {
+          from {
+            opacity: 0;
+            transform: scale(0.9);
+          }
+          to {
+            opacity: 1;
+            transform: scale(1);
+          }
+        }
+        .animate-fade-in {
+          animation: fade-in 0.25s ease-out forwards;
+        }
+        .animate-zoom-in {
+          animation: zoom-in 0.35s ease-out forwards;
+        }
+      `}</style>
+    </>
   );
 }

@@ -20,9 +20,7 @@
       "@components/*": ["./src/Components/*"],
       "@app/*": ["./src/app/*"]
     },
-    "plugins": [{
-      "name": "next"
-    }]
+    "plugins": [{ "name": "next" }]
   },
   "include": [
     "next-env.d.ts",
@@ -31,6 +29,6 @@
     "**/*.tsx",
     "**/*.js",
     "**/*.jsx"
-, "src/app/api/verify-password"  ],
+  ],
   "exclude": ["node_modules"]
 }

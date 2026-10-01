@@ -11,7 +11,7 @@ import { DM_Sans } from 'next/font/google';
 // Font configuration
 const dmsans = DM_Sans({ 
   subsets: ['latin'],
-  weight: '700',
+  weight: ['400', '500', '700'],
 });
 
 // Sanity client configuration
@@ -47,25 +47,19 @@ const AboutUsSection = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const [
-          home1Data,
-          home2Images,
-          home3Images,
-          home4Images
-        ] = await Promise.all([
+        const [home1Data, home2Images, home3Images, home4Images] = await Promise.all([
           client.fetch<{ image: SanityImage }>('*[_type == "abouthome1"][0] { image }'),
           client.fetch<SanityImageItem[]>('*[_type == "abouthome2"] { image }'),
           client.fetch<SanityImageItem[]>('*[_type == "abouthome3"] { image }'),
           client.fetch<SanityImageItem[]>('*[_type == "abouthome4"] { image }')
         ]);
 
-        // Combine all images into a single array
         const allImages = [
           ...(home1Data?.image ? [home1Data.image] : []),
           ...(home2Images?.map((item) => item.image) || []),
           ...(home3Images?.map((item) => item.image) || []),
           ...(home4Images?.map((item) => item.image) || [])
-        ].filter(Boolean); // Remove any undefined/null images
+        ].filter(Boolean);
 
         setImages(allImages);
       } catch (error) {
@@ -80,18 +74,52 @@ const AboutUsSection = () => {
     if (images.length > 1) {
       const interval = setInterval(() => {
         setCurrentImageIndex((prevIndex) => (prevIndex + 1) % images.length);
-      }, 5000); // Rotate every 5 seconds
-
+      }, 5000);
       return () => clearInterval(interval);
     }
   }, [images]);
 
   return (
-    <section className="w-full py-12 md:py-24 px-4 md:pl-10">
-      <div className="flex flex-col lg:flex-row w-full">
-        {/* Image Gallery */}
-        <div className="lg:w-1/2 w-full lg:pr-10 mb-8 lg:mb-0 order-1 lg:order-2">
-          <div className="relative h-64 md:h-[26rem] lg:h-[29rem] w-full overflow-hidden">
+    <section className="w-full py-16 md:py-24 px-6 md:px-12 lg:px-16 bg-white">
+      <div className="max-w-7xl mx-auto flex flex-col lg:flex-row items-center gap-12 lg:gap-16">
+
+        {/* Text Content — LEFT */}
+        <div className="w-full lg:w-1/2 order-2 lg:order-1">
+          <div className="max-w-xl">
+
+            {/* Small label with green underline */}
+            <div className="mb-6">
+              <h2 className={`text-sm font-bold text-black tracking-[0.2em] uppercase inline-block relative pb-2 ${dmsans.className}`}>
+                About Us
+                <span className="absolute left-0 bottom-0 w-12 h-0.5 bg-[#009E4D]"></span>
+              </h2>
+            </div>
+
+            {/* Main heading */}
+            <h3 className={`text-2xl sm:text-3xl md:text-4xl font-bold tracking-tight text-black leading-[1.25] mb-6 ${dmsans.className}`}>
+              A to Zee Switchgear Engineering with Schneider Electric
+            </h3>
+
+            {/* Body paragraph — justified, comfortable line-height */}
+            <p className={`text-sm md:text-base text-gray-600 leading-7 tracking-normal mb-10 text-justify ${dmsans.className} font-normal`}>
+              A to Zee Systems offers comprehensive electro-technical solutions, from low-voltage panels to process automation, serving industries nationwide. With 25 years of expertise, we provide safe power distribution and innovative technologies under one roof. Our patented products and customer-specific project management ensure efficient, end-to-end solutions. Backed by a vast sales and service network, we combine local tradition with global reach. Trusted by industries and power suppliers, we deliver reliable, integrated systems for complex electrical needs. A to Zee Systems—your partner for cutting-edge power distribution and automation.
+            </p>
+
+            {/* Read More button */}
+            <Link href="/about" className="inline-block">
+              <span
+                className={`inline-flex items-center gap-2 text-black font-semibold text-xs md:text-sm px-6 py-3 bg-transparent border-2 border-black rounded-full hover:bg-[#009E4D] hover:border-[#009E4D] hover:text-white transition-all duration-200 uppercase tracking-wider group ${dmsans.className}`}
+              >
+                Read More
+                <FaArrowRight className="group-hover:translate-x-1 transition-transform" size={12} />
+              </span>
+            </Link>
+          </div>
+        </div>
+
+        {/* Image Gallery — RIGHT */}
+        <div className="w-full lg:w-1/2 order-1 lg:order-2">
+          <div className="relative h-64 sm:h-80 md:h-[26rem] lg:h-[30rem] w-full overflow-hidden rounded-lg border border-gray-200 shadow-sm">
             {images.map((image, index) => (
               <div
                 key={image._key || index}
@@ -111,38 +139,27 @@ const AboutUsSection = () => {
                 />
               </div>
             ))}
+
+            {/* Image dots */}
+            {images.length > 1 && (
+              <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2 z-10">
+                {images.map((_, index) => (
+                  <button
+                    key={index}
+                    onClick={() => setCurrentImageIndex(index)}
+                    className={`h-1.5 rounded-full transition-all duration-300 ${
+                      index === currentImageIndex
+                        ? 'w-8 bg-[#009E4D]'
+                        : 'w-1.5 bg-white/70 hover:bg-white'
+                    }`}
+                    aria-label={`Go to image ${index + 1}`}
+                  />
+                ))}
+              </div>
+            )}
           </div>
         </div>
 
-        {/* Text Content */}
-        <div className="lg:w-1/2 lg:pl-8 pr-0 md:pr-8 order-2 lg:order-1">
-          <div className="text-left mb-8">
-            <h1 className={`text-lg font-bold text-gray-800 mb-4 tracking-wider ${dmsans.className}`}>
-              ABOUT US
-            </h1>
-            <p className={`text-2xl md:text-3xl font-semibold tracking-wide text-black mb-6 md:mb-8 leading-tight ${dmsans.className}`}>
-              A to Zee Switchgear Engineering with Schneider Electric
-            </p>
-
-            <p className={`text-gray-700 mb-8 md:mb-10 leading-relaxed font-normal text-base md:text-sm tracking-wider ${dmsans.className}`}>
-              A to Zee Systems offers comprehensive electro-technical solutions, from low-voltage panels to process automation, serving industries nationwide. With 25 years of expertise, we provide safe power distribution and innovative technologies under one roof. Our patented products and customer-specific project management ensure efficient, end-to-end solutions. Backed by a vast sales and service network, we combine local tradition with global reach. Trusted by industries and power suppliers, we deliver reliable, integrated systems for complex electrical needs. A to Zee Systems—your partner for cutting-edge power distribution and automation.
-            </p>
-
-            <div className="pt-2">
-              <Link
-                href="/about"
-                className="inline-block" // Added to maintain button layout
-              >
-                <span 
-                  className={`text-black font-semibold px-4 py-3 bg-white hover:bg-gray-100 transition uppercase tracking-wider rounded-sm border border-gray-900 flex items-center gap-2 group ${dmsans.className}`}
-                >
-                  READ MORE
-                  <FaArrowRight className="group-hover:translate-x-1 transition-transform" size={14} />
-                </span>
-              </Link>
-            </div>
-          </div>
-        </div>
       </div>
     </section>
   );
